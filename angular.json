@@ -55,6 +55,12 @@
           "configurations": {
             "production": {
               "browserTarget": "redmine-client:build:production"
+            },
+            "mock": {
+              "proxyConfig": "proxy-mock.conf.js"
+            },
+            "dev": {
+              "proxyConfig": "proxy.conf.json"
             }
           }
         },

@@ -1,0 +1,9 @@
+.reload {
+  height: 1.3rem;
+}
+.issue-contatiner:nth-child(even) {
+  background-color: rgba(0,0,0,.05)
+}
+.issue-contatiner:nth-child(odd) {
+  background-color: #f8f9fa
+}

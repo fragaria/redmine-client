@@ -1,0 +1,14 @@
+<div class="container-fluid">
+  <!-- <div class="row">
+    <div class="col">Spent on</div>
+    <div class="col">Hours</div>
+    <div class="col">Activity</div>
+    <div class="col-lg-6">Comments</div>
+  </div> -->
+  <div class="row" *ngFor="let entry of entries.time_entries">
+    <div class="col">{{entry.spent_on}}</div>
+    <div class="col">{{entry.hours}}</div>
+    <div class="col">{{entry.activity.name}}</div>
+    <div class="col-lg-6">{{entry.comments}}</div>
+  </div>
+</div>
