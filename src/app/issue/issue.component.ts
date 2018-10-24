@@ -46,6 +46,9 @@ export class IssueComponent implements OnInit {
 
   timeLogged(newEntry: TimeEntry) {
     // debugger;
+    this.redmine.getLastTime(this.issue.id).subscribe(
+      time => this.lastLogEntry = time
+    );
     if(this.showLog && (this.log === undefined || this.log == null)) {
       this.log = new TimeEntryList();
     }

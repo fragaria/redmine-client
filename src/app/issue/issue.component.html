@@ -1,6 +1,9 @@
   <div class="row">
     <a class="col-lg-7" (click)="toggleLog()" >{{issue.subject}}</a>
-    <div class="col"><span *ngIf="lastLogEntry">Last entry on {{lastLogEntry}}</span></div>
+    <div class="col">
+      <span *ngIf="lastLogEntry; else notLoggedYet">Last entry on {{lastLogEntry}}</span>
+      <ng-template #notLoggedYet><span class="not-logged">Not logged yet</span></ng-template>
+    </div>
     <!--<a class="col" (click)="toggleLog()">
       <span *ngIf="showLog; else hideLog">Hide log</span>
       <ng-template #hideLog><span>Show log</span></ng-template>
