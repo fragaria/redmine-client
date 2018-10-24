@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { RedmineService } from '../redmine.service';
-import { IssueList, Issue } from '../dto/issues';
+import { IssueList, Issue } from '../models/issues';
 
 @Component({
   selector: 'app-issue-list',

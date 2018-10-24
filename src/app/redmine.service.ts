@@ -4,11 +4,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap, take } from 'rxjs/operators';
 
-import { IssueList } from './dto/issues';
-import { UserResponse, User } from './dto/users';
-import { TimeEntryList, NewTimeEntry, TimeEntry } from './dto/time-entries';
-import { TimeEntryActivityList } from './dto/enums';
-import { Field } from './dto/fields';
+import { IssueList } from './models/issues';
+import { UserResponse, User } from './models/users';
+import { TimeEntryList, NewTimeEntry, TimeEntry } from './models/time-entries';
+import { TimeEntryActivityList } from './models/enums';
+import { Field } from './models/fields';
 
 @Injectable({
   providedIn: 'root'

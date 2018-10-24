@@ -2,8 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { RedmineService } from '../redmine.service';
-import { Field } from '../dto/fields';
-import { NewTimeEntry, TimeEntry } from '../dto/time-entries';
+import { Field } from '../models/fields';
+import { NewTimeEntry, TimeEntry } from '../models/time-entries';
 
 @Component({
   selector: 'app-time-entry',

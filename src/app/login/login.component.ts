@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { RedmineService } from '../redmine.service';
-import { User } from '../dto/users';
+import { User } from '../models/users';
 
 @Component({
   selector: 'app-login',
