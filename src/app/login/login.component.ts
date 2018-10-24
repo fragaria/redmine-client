@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { RedmineService } from '../redmine.service';
 import { User } from '../dto/users';
-import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +12,13 @@ import { AppComponent } from '../app.component';
 })
 export class LoginComponent implements OnInit {
 
+  @Output() username = new EventEmitter<string>();
+
   loginForm: FormGroup;
 
   constructor(
     private redmine: RedmineService,
-    private router: Router,
-    private appComponent: AppComponent
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -28,10 +28,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  authenticate(): void {
+  authenticate() {
     this.redmine.authenticate(this.loginForm.value.username, this.loginForm.value.password).subscribe(user => {
-      this.appComponent.setUsername(user.firstname);
-      this.router.navigateByUrl('home')
+      this.username.emit(user.firstname);
+      this.router.navigateByUrl('home');
     });
   }
 
