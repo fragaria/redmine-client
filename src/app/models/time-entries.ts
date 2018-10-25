@@ -20,6 +20,8 @@ export class TimeEntry {
   spent_on: string;
   created_on: string;
   updated_on: string;
+  // display extension
+  isNew: boolean = false;
 };
 
 export class NewTimeEntry {

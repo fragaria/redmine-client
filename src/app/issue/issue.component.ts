@@ -44,7 +44,7 @@ export class IssueComponent implements OnInit {
     this.showLogTime = !this.showLogTime;
   }
 
-  timeLogged(newEntry: TimeEntry) {
+  timeLogged(entry: TimeEntry) {
     // debugger;
     this.redmine.getLastTime(this.issue.id).subscribe(
       time => this.lastLogEntry = time
@@ -53,26 +53,15 @@ export class IssueComponent implements OnInit {
       this.log = new TimeEntryList();
     }
     if(this.log !== undefined && this.log != null) {
-      this.log.time_entries.splice(0, 0, newEntry
-        // {
-        //   id: null,
-        //   project: this.issue.project,
-        //   issue: {
-        //     id: this.issue.id
-        //   },
-        //   user: null,
-        //   activity: {
-        //     id: newEntry.activity_id,
-        //     name: newEntry.activity_name
-        //   },
-        //   hours: newEntry.hours,
-        //   comments: newEntry.comments,
-        //   spent_on: newEntry.spent_on,
-        //   created_on: null,
-        //   updated_on: null
-        // }
-      );
+      // debugger;
+      entry.isNew = true;
+      setTimeout(function() {
+        entry.isNew = false;
+      }, 20000);
+      this.log.time_entries.splice(0, 0, entry);
       this.log.total_count += 1;
+    } else {
+      // TODO add message to a message service
     }
   }
 

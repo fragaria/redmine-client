@@ -56,7 +56,7 @@ export class TimeEntryComponent implements OnInit {
   }
 
   createNewTimeEntry() {
-    debugger;
+    // debugger;
     const activityId = (typeof this.timeEntryForm.value.activityId == "string") ? parseInt(this.timeEntryForm.value.activityId, 10) : this.timeEntryForm.value.activityId;
     const activityName = this.redmine.getActivityById(activityId).name;
     const newTimeEntry = {

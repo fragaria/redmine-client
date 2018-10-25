@@ -11,6 +11,7 @@ import { IssueListComponent } from './issue-list/issue-list.component';
 import { TimeEntriesComponent } from './time-entries/time-entries.component';
 import { TimeEntryComponent } from './time-entry/time-entry.component';
 import { IssueComponent } from './issue/issue.component';
+import { WeekLogComponent } from './week-log/week-log.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { IssueComponent } from './issue/issue.component';
     IssueListComponent,
     TimeEntriesComponent,
     TimeEntryComponent,
-    IssueComponent
+    IssueComponent,
+    WeekLogComponent
   ],
   imports: [
     BrowserModule,
