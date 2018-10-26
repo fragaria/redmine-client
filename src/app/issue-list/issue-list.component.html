@@ -11,5 +11,7 @@
 </div>
 
 <div *ngIf="issues" class="container-fluid">
-  <app-issue *ngFor="let issue of issues" [issue]="issue" ></app-issue>
+  <div *ngFor="let issue of issues" class="issue-container">
+    <app-issue [issue]="issue" ></app-issue>
+  </div>
 </div>
