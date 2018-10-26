@@ -7,8 +7,8 @@
   </div> -->
   <div class="row" *ngFor="let entry of entries.time_entries" [class.newEntry]="entry.isNew" >
     <div class="col">{{entry.spent_on}}</div>
-    <div class="col">{{entry.hours}}</div>
-    <div class="col">{{entry.activity.name}}</div>
-    <div class="col-lg-6">{{entry.comments}}</div>
+    <div class="col-1">{{entry.hours}}</div>
+    <div class="col-2">{{entry.activity.name}}</div>
+    <div class="col-lg-7">{{entry.comments}}</div>
   </div>
 </div>

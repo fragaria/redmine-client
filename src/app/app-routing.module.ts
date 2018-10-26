@@ -3,12 +3,14 @@ import { RouterModule, Routes, Router, NavigationStart, RouterEvent } from '@ang
 
 import { LoginComponent } from './login/login.component';
 import { IssueListComponent } from './issue-list/issue-list.component';
+import { WeekLogComponent } from './week-log/week-log.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'issues', component: IssueListComponent},
-  { path: 'home', redirectTo: '/issues'},
-  { path: '', redirectTo: '/issues', pathMatch: 'full'}
+  { path: 'week', component: WeekLogComponent},
+  { path: 'home', redirectTo: '/week'},
+  { path: '', redirectTo: '/week', pathMatch: 'full'}
 ];
 
 @NgModule({

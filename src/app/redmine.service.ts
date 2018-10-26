@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import * as moment from 'moment';
+
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap, take } from 'rxjs/operators';
 
@@ -37,7 +39,14 @@ export class RedmineService {
 
   constructor(
     private http: HttpClient
-  ) { }
+  ) {
+    moment.updateLocale('en', {
+      week : {
+        dow : 1, // Monday is the first day of the week.
+        doy : 3  // The week that contains Jan 4th is the first week of the year.
+      }
+    });
+  }
 
   authenticate(username: string, password: string): Observable<User> {
     let httpOptions = this.httpOptions;
@@ -63,7 +72,7 @@ export class RedmineService {
         tap((issueList: IssueList) => {
           console.log(`${issueList.total_count} issues found.`);
         }),
-        catchError(this.handleError<IssueList>("listMyIssues"))
+        catchError(this.handleError<IssueList>("listMyIssues", new IssueList()))
       );
   }
 
@@ -83,7 +92,22 @@ export class RedmineService {
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
         tap((issueList: IssueList) => console.log(`${issueList.total_count} time entries found.`)),
-        catchError(this.handleError<string>("getTimeEntries"))
+        catchError(this.handleError<TimeEntryList>("getTimeEntries", new TimeEntryList()))
+      );
+  }
+
+  /**
+   * @param week - moment.HTML5_FMT.WEEK (YYYY-[W]WW) string, e.g. 2013-W06
+   */
+  getTimeEntriesForWeek(week: string): Observable<TimeEntryList> {
+    const min = moment(week, moment.HTML5_FMT.WEEK).startOf("week").format("YYYY-MM-DD");
+    const max = moment(week, moment.HTML5_FMT.WEEK).endOf("week").format("YYYY-MM-DD");
+    const url = this.timeEntriesPath + `?user_id=${this.currentUser.id}&spent_on=><${min}|${max}`;
+    // debugger;
+    return this.http
+      .get<TimeEntryList>(url, this.httpOptions).pipe(
+        tap((issueList: IssueList) => console.log(`${issueList.total_count} time entries found for the week.`)),
+        catchError(this.handleError<TimeEntryList>("getTimeEntriesForWeek", new TimeEntryList()))
       );
   }
 

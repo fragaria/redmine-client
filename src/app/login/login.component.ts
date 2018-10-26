@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   authenticate() {
     this.redmine.authenticate(this.loginForm.value.username, this.loginForm.value.password).subscribe(user => {
       this.username.emit(user.firstname);
-      this.router.navigateByUrl('home');
+      this.router.navigateByUrl(this.router.url);
     });
   }
 

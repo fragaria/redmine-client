@@ -1,14 +1,15 @@
-<div *ngIf="issues" class="container-fluid">
-  <h2>Your issues <span *ngIf="issues.length != total_count">({{issues.length}}/{{total_count}}) </span>
-    <a (click)=getIssues()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a></h2>
-  <div class="container-fluid">
-    <div class="row">
-      <h5 class="col-lg-6">Issue (tap to toggle full log)</h5>
-      <!-- <h5 class="col">Last log from</h5>
-      <h5 class="col">New entry</h5> -->
-    </div>
-    <div style="issue-contatiner">
-      <app-issue *ngFor="let issue of issues" [issue]="issue" ></app-issue>
-    </div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-9">
+      <h2>Your issues <span *ngIf="issues && issues.length != total_count">({{issues.length}}/{{total_count}}) </span>
+      <a (click)=getIssues()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a>
+    </h2>
   </div>
+  <div class="col text-right text-muted">
+    <small class="mb-0">tap issue to toggle full log</small>
+  </div>
+</div>
+
+<div *ngIf="issues" class="container-fluid">
+  <app-issue *ngFor="let issue of issues" [issue]="issue" ></app-issue>
 </div>

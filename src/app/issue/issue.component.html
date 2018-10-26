@@ -1,21 +1,21 @@
-  <div class="row">
-    <a class="col-lg-7" (click)="toggleLog()" >{{issue.subject}}</a>
-    <div class="col">
-      <span *ngIf="lastLogEntry; else notLoggedYet">Last entry on {{lastLogEntry}}</span>
-      <ng-template #notLoggedYet><span class="not-logged">Not logged yet</span></ng-template>
-    </div>
-    <!--<a class="col" (click)="toggleLog()">
-      <span *ngIf="showLog; else hideLog">Hide log</span>
-      <ng-template #hideLog><span>Show log</span></ng-template>
-    </a>-->
-    <a class="col" (click)="toggleLogTime()">
-      <span *ngIf="showLogTime; else hideLogTime">Logged</span>
-      <ng-template #hideLogTime><span>Record log</span></ng-template>
-    </a>
+<div class="row">
+  <a class="col-lg-9" (click)="toggleLog()" ><h5>{{issue.subject}}</h5></a>
+  <div class="col text-right">
+    <span *ngIf="lastLogEntry; else notLoggedYet">Last entry on {{lastLogEntry}}</span>
+    <ng-template #notLoggedYet><span class="not-logged">Not logged yet</span></ng-template>
   </div>
-  <div class="row">
-    <app-time-entry class="col-xl" *ngIf="showLogTime" [issueId]="issue.id" (newEntry)="timeLogged($event)"></app-time-entry>
-  </div>
-  <div class="row">
-    <app-time-entries class="col-xl" *ngIf="showLog" [entries]="log" ></app-time-entries>
-  </div>
+  <!--<a class="col" (click)="toggleLog()">
+    <span *ngIf="showLog; else hideLog">Hide log</span>
+    <ng-template #hideLog><span>Show log</span></ng-template>
+  </a>-->
+  <a class="col-1 text-right" (click)="toggleLogTime()">
+    <span *ngIf="showLogTime; else hideLogTime">Logged</span>
+    <ng-template #hideLogTime><span>Record log</span></ng-template>
+  </a>
+</div>
+<div class="row">
+  <app-time-entry class="col-xl" *ngIf="showLogTime" [issueId]="issue.id" (newEntry)="timeLogged($event)"></app-time-entry>
+</div>
+<div class="row">
+  <app-time-entries class="col-xl" *ngIf="showLog" [entries]="log" ></app-time-entries>
+</div>
