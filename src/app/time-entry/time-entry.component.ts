@@ -21,13 +21,9 @@ export class TimeEntryComponent implements OnInit {
 
   private activities: Field[] = [];
 
-  private msg = "";
-
-  private error = "";
-
   constructor(
     private redmine: RedmineService,
-    private formBuilder: FormBuilder,
+    private formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {
@@ -51,8 +47,6 @@ export class TimeEntryComponent implements OnInit {
         this.timeEntryForm.patchValue({activityId: defaultActivity.id});
       });
     });
-    this.msg = "";
-    this.error = "";
   }
 
   createNewTimeEntry() {
@@ -68,7 +62,6 @@ export class TimeEntryComponent implements OnInit {
       comments: this.timeEntryForm.value.comment
     };
     this.redmine.createNewTimeEntry(newTimeEntry).subscribe(created => {
-      this.msg = "Time entry added";
       this.initTimeEntryForm()
       this.newEntry.emit(created);
     });

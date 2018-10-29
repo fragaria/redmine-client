@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { RedmineService } from '../redmine.service';
+import { MessageService } from '../message.service';
 import { Issue } from '../models/issues';
 import { TimeEntryList, TimeEntry } from '../models/time-entries';
 
@@ -16,10 +17,13 @@ export class IssueComponent implements OnInit {
   lastLogEntry: string;
   showLog: boolean = false;
   log: TimeEntryList;
-  showLogTime: boolean = false;
+  showNewLogForm: boolean = false;
+
+  newEntryTimeout = 10000;
 
   constructor(
-    private redmine: RedmineService
+    private redmine: RedmineService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit() {
@@ -29,7 +33,7 @@ export class IssueComponent implements OnInit {
   toggleLog() {
     // debugger;
     if(!this.showLog && !this.log) {
-      this.redmine.getTimeEntries(this.issue.id).subscribe(entries => {
+      this.redmine.listTimeEntries(this.issue.id).subscribe(entries => {
         console.log('retrieved: ' + entries.time_entries.length);
         this.log = entries;
         this.showLog = true;
@@ -41,7 +45,7 @@ export class IssueComponent implements OnInit {
 
   toggleLogTime() {
     // debugger;
-    this.showLogTime = !this.showLogTime;
+    this.showNewLogForm = !this.showNewLogForm;
   }
 
   timeLogged(entry: TimeEntry) {
@@ -49,6 +53,9 @@ export class IssueComponent implements OnInit {
     this.redmine.getLastTime(this.issue.id).subscribe(
       time => this.lastLogEntry = time
     );
+    if(!this.showLog) {
+      this.messageService.add(`Time spent on ${entry.spent_on} was logged to ${this.issue.subject}.`);
+    }
     if(this.showLog && (this.log === undefined || this.log == null)) {
       this.log = new TimeEntryList();
     }
@@ -57,11 +64,9 @@ export class IssueComponent implements OnInit {
       entry.isNew = true;
       setTimeout(function() {
         entry.isNew = false;
-      }, 20000);
+      }, this.newEntryTimeout);
       this.log.time_entries.splice(0, 0, entry);
       this.log.total_count += 1;
-    } else {
-      // TODO add message to a message service
     }
   }
 

@@ -6,10 +6,12 @@ import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap, take } from 'rxjs/operators';
 
-import { IssueList } from './models/issues';
+import { MessageService } from './message.service';
+
+import { IssueList, Issue } from './models/issues';
 import { UserResponse, User } from './models/users';
 import { TimeEntryList, NewTimeEntry, TimeEntry } from './models/time-entries';
-import { TimeEntryActivityList } from './models/enums';
+import { TimeEntryActivityList, MessageType } from './models/enums';
 import { Field } from './models/fields';
 
 @Injectable({
@@ -30,15 +32,17 @@ export class RedmineService {
 
   private currentUser: User = null;
   private activitiesEnum: Field[];
-  private activitiesMap: Map<number, Field>;
+  private activitiesMap: Map<number, Field> = new Map();
   private defaultActivity: Field;
+  private issuesMap: Map<number, Issue> = new Map();
 
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' })
   };
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private messageService: MessageService
   ) {
     moment.updateLocale('en', {
       week : {
@@ -58,7 +62,7 @@ export class RedmineService {
           this.currentUser = user;
           this.httpOptions.headers.append(this.apiKeyHeader, this.currentUser.api_key);
         }),
-        catchError(this.handleError<User>("authenticate"))
+        catchError(this.handleError<User>("Authentication"))
       );
   }
 
@@ -71,9 +75,26 @@ export class RedmineService {
       .get<IssueList>(this.myIssuesPath, this.httpOptions).pipe(
         tap((issueList: IssueList) => {
           console.log(`${issueList.total_count} issues found.`);
+          // debugger;
+          for(let issue of issueList.issues) {
+            this.issuesMap.set(issue.id, issue);
+          }
         }),
-        catchError(this.handleError<IssueList>("listMyIssues", new IssueList()))
+        catchError(this.handleError<IssueList>("Listing your issues", new IssueList()))
       );
+  }
+
+  getIssueById(id: number): Observable<Issue> {
+    if(this.issuesMap.has(id)) {
+      return of(this.issuesMap.get(id));
+    } else {
+      const url = this.timeEntriesPath + `/issues/${id}.json`;
+      return this.http.get<Issue>(url, this.httpOptions).pipe(
+        // map(issue => issue.issue),
+        tap(issue => this.issuesMap.set(issue.id, issue)),
+        catchError(this.handleError<Issue>("Obtaining issue by ID"))
+      )
+    }
   }
 
   getLastTime(issueId: number): Observable<string> {
@@ -82,32 +103,32 @@ export class RedmineService {
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
         map((timeEntryList: TimeEntryList) => (timeEntryList.time_entries.length > 0) ? timeEntryList.time_entries[0].spent_on : ""),
-        catchError(this.handleError<string>("getLastTime", "", [404]))
+        catchError(this.handleError<string>("Last log time computation", "", [404]))
       );
   }
 
-  getTimeEntries(issueId: number): Observable<TimeEntryList> {
+  listTimeEntries(issueId: number): Observable<TimeEntryList> {
     const url = this.timeEntriesPath + `?issue_id=${issueId}&user_id=${this.currentUser.id}&limit=30`;
     // debugger;
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
         tap((issueList: IssueList) => console.log(`${issueList.total_count} time entries found.`)),
-        catchError(this.handleError<TimeEntryList>("getTimeEntries", new TimeEntryList()))
+        catchError(this.handleError<TimeEntryList>("Listing time entries", new TimeEntryList()))
       );
   }
 
   /**
    * @param week - moment.HTML5_FMT.WEEK (YYYY-[W]WW) string, e.g. 2013-W06
    */
-  getTimeEntriesForWeek(week: string): Observable<TimeEntryList> {
+  listTimeEntriesForWeek(week: string): Observable<TimeEntryList> {
     const min = moment(week, moment.HTML5_FMT.WEEK).startOf("week").format("YYYY-MM-DD");
     const max = moment(week, moment.HTML5_FMT.WEEK).endOf("week").format("YYYY-MM-DD");
-    const url = this.timeEntriesPath + `?user_id=${this.currentUser.id}&spent_on=><${min}|${max}`;
+    const url = this.timeEntriesPath + `?user_id=${this.currentUser.id}&spent_on=><${min}|${max}&limit=99`;
     // debugger;
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
-        tap((issueList: IssueList) => console.log(`${issueList.total_count} time entries found for the week.`)),
-        catchError(this.handleError<TimeEntryList>("getTimeEntriesForWeek", new TimeEntryList()))
+        tap((issueList: TimeEntryList) => console.log(`${issueList.total_count} time entries found for the week.`)),
+        catchError(this.handleError<TimeEntryList>("Listing week time entries", new TimeEntryList()))
       );
   }
 
@@ -125,7 +146,7 @@ export class RedmineService {
               this.activitiesMap.set(activity.id, activity);
             }
           }),
-          catchError(this.handleError<Field[]>("getActivitiesEnum", []))
+          catchError(this.handleError<Field[]>("Obtaining activities enum", []))
         );
     } else {
       // debugger;
@@ -134,7 +155,7 @@ export class RedmineService {
   }
 
   getActivityById(id: number): Field {
-    return (this.activitiesMap !== undefined && this.activitiesMap != null) ? this.activitiesMap.get(id) : null;
+    return this.activitiesMap.get(id);
   }
 
   getDefaultActivity(): Observable<Field> {
@@ -151,7 +172,7 @@ export class RedmineService {
           return activities[0];
         }),
         tap(activity => this.defaultActivity = activity),
-        catchError(this.handleError<Field>("getDefaultActivity"))
+        catchError(this.handleError<Field>("Obtaining default activity"))
       );
     } else {
       return of(this.defaultActivity);
@@ -162,7 +183,7 @@ export class RedmineService {
     return this.http
       .post(this.timeEntriesPath, {"time_entry": timeEntry}, this.httpOptions).pipe(
         map((timeEntryContainer: {"time_entry": TimeEntry}) => timeEntryContainer.time_entry),
-        catchError(this.handleError<TimeEntry>("getTimeEntries"))
+        catchError(this.handleError<TimeEntry>("New time entry creation"))
       );
   }
 
@@ -177,15 +198,25 @@ export class RedmineService {
    * @param result - optional value to return as the observable result
    * @param ignoreStatuses - list of statuses to be ignored
    */
-  private handleError<T> (operation = 'operation', result?: T, ignoreStatuses?: number[]) {
+  private handleError<T> (operation = 'Operation', result?: T, ignoreStatuses?: number[]) {
     return (error: any): Observable<T> => {
       if(ignoreStatuses === undefined || !ignoreStatuses.includes(error.status)) {
-        // TODO: send the error to remote logging infrastructure
-        console.error(error); // log to console instead
+        this.messageService.add(`${operation} failed because of: ${this.extractErrorMessage(error)}`, MessageType.ERROR);
+        console.log(`${operation} failed because of:\n${JSON.stringify(error)}`);
       }
       // TODO: better job of transforming error for user consumption
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
+  }
+
+  private extractErrorMessage(error: any): string {
+    if(error !== undefined && error != null && error.hasOwnProperty("message")) {
+      return error.message;
+    } else if(error.hasOwnProperty("error")) {
+      return error.error;
+    } else {
+      return JSON.stringify(error);
+    }
   }
 }
