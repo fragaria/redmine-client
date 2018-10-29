@@ -1,5 +1,7 @@
 <div class="row">
-  <a class="col-lg-9" (click)="toggleLog()" ><h5>{{issue.subject}}</h5></a>
+  <a class="col-lg-9" (click)="toggleLog()" >
+    <h5>{{issue.subject}} <a *ngIf="showLog" (click)=loadLog()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a></h5>
+  </a>
   <div class="col text-right">
     <span *ngIf="lastLogEntry; else notLoggedYet">Last entry on {{lastLogEntry}}</span>
     <ng-template #notLoggedYet><span class="not-logged">Not logged yet</span></ng-template>

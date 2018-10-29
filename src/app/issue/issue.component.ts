@@ -33,14 +33,18 @@ export class IssueComponent implements OnInit {
   toggleLog() {
     // debugger;
     if(!this.showLog && !this.log) {
-      this.redmine.listTimeEntries(this.issue.id).subscribe(entries => {
-        console.log('retrieved: ' + entries.time_entries.length);
-        this.log = entries;
-        this.showLog = true;
-      });
+      this.loadLog();
     } else {
       this.showLog = !this.showLog;
     }
+  }
+
+  loadLog() {
+    this.redmine.listTimeEntries(this.issue.id).subscribe(entries => {
+      console.log('retrieved: ' + entries.time_entries.length);
+      this.log = entries;
+      this.showLog = true;
+    });
   }
 
   toggleLogTime() {
