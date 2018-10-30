@@ -7,6 +7,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap, take } from 'rxjs/operators';
 
 import { MessageService } from './message.service';
+import { SettingsService } from './settings.service';
 
 import { IssueList, Issue } from './models/issues';
 import { UserResponse, User } from './models/users';
@@ -18,10 +19,6 @@ import { Field } from './models/fields';
   providedIn: 'root'
 })
 export class RedmineService {
-
-  public defaultHours = 8;
-
-  private defaultActivityName = 'Development';
 
   private currentUserPath = "/api/users/current.json";
   private myIssuesPath = "/api/issues.json?assigned_to_id=me";
@@ -42,7 +39,8 @@ export class RedmineService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private settings: SettingsService
   ) {
     moment.updateLocale('en', {
       week : {
@@ -159,13 +157,16 @@ export class RedmineService {
   }
 
   getDefaultActivity(): Observable<Field> {
+    let defaultActivityName = this.settings.get().defaultActivityName;
     // debugger;
-    if(this.defaultActivity === undefined || this.defaultActivity == null) {
+    if(this.defaultActivity === undefined || this.defaultActivity == null || defaultActivityName != this.defaultActivity.name) {
       return this.getActivitiesEnum().pipe(
         map((activities: Field[]) => {
+          // debugger;
           let result = null;
+
           for(let activity of activities) {
-            if(activity.name == this.defaultActivityName) {
+            if(activity.name == defaultActivityName) {
               return activity;
             }
           }

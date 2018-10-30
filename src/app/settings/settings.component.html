@@ -1,0 +1,40 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl">
+      <h2>Your settings</h2>
+    </div>
+  </div>
+  <!-- <div class="row"> -->
+    <div class="container-fluid mt-3 ml-2">
+      <div class="row mb-3 align-items-center">
+        <div class="col align-items-center">
+          <label for="defaultHours">Default hours:</label>
+        </div>
+        <div class="col">
+          <input id="defaultHours" type="number" [(ngModel)]="settings.defaultHours" min="0.25" max="8" step="0.25" class="form-control"/>
+        </div>
+        <div class="col-xl-8">
+        </div>
+      </div>
+      <div class="row mb-3 align-items-center">
+        <div class="col align-items-center">
+          <label for="defaultActivityName">Default activity:</label>
+        </div>
+        <div class="col">
+          <select id="defaultActivityName" [(ngModel)]="settings.defaultActivityName" class="custom-select d-block w-100" >
+            <option *ngFor="let activity of activities" value="{{activity.name}}">{{activity.name}}</option>
+          </select>
+        </div>
+        <div class="col-xl-8">
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-3">
+        </div>
+        <div class="col-xl-9">
+          <button type="submit" (click)="save()" class="btn btn-lg btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  <!-- </div> -->
+</div>

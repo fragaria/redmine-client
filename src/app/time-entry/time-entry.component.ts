@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { RedmineService } from '../redmine.service';
+import { SettingsService } from '../settings.service';
 import { Field } from '../models/fields';
 import { NewTimeEntry, TimeEntry } from '../models/time-entries';
 
@@ -23,6 +24,7 @@ export class TimeEntryComponent implements OnInit {
 
   constructor(
     private redmine: RedmineService,
+    private settings: SettingsService,
     private formBuilder: FormBuilder
   ) { }
 
@@ -32,7 +34,7 @@ export class TimeEntryComponent implements OnInit {
 
   initTimeEntryForm() {
     // debugger;
-    const defaultHours = this.redmine.defaultHours;
+    const defaultHours = this.settings.get().defaultHours;
     this.timeEntryForm = this.formBuilder.group ({
       from: [(new Date()).toISOString().substring(0, 10), Validators.required],
       hours: [defaultHours, [Validators.required, Validators.min(0.25), Validators.max(24)]],
