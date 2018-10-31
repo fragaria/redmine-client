@@ -5,7 +5,7 @@
   padding: 8px 7px 4px 7px;
 }
 .issue-container:nth-child(even) {
-    background: #f8f9fa;
+    background: #f3f4f5;
 }
 .issue-container:nth-child(odd) {
     background: #ebeced;

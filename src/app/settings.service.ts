@@ -10,11 +10,13 @@ export class SettingsService {
   private settings: Settings;
   private defaultHoursKey = 'defaultHours';
   private defaultActivityNameKey = 'defaultActivityName';
+  private dailyWorkingHoursKey = 'dailyWorkingHours';
 
   constructor() {
     this.settings = {
       defaultHours: this.getNumberFromLocalStorage(this.defaultHoursKey, 8),
-      defaultActivityName: this.getStringFromLocalStorage(this.defaultActivityNameKey, 'Development')
+      defaultActivityName: this.getStringFromLocalStorage(this.defaultActivityNameKey, 'Development'),
+      dailyWorkingHours: this.getNumberFromLocalStorage(this.dailyWorkingHoursKey, 8)
     };
   }
 
@@ -42,5 +44,6 @@ export class SettingsService {
     this.settings = settings;
     localStorage.setItem(this.defaultHoursKey, settings.defaultHours.toString());
     localStorage.setItem(this.defaultActivityNameKey, settings.defaultActivityName);
+    localStorage.setItem(this.dailyWorkingHoursKey, settings.dailyWorkingHours.toString());
   }
 }
