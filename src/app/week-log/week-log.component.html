@@ -1,3 +1,8 @@
-<div class="row">
-  <app-time-entries class="col-xl" *ngIf="timeEntries" [entries]="timeEntries" ></app-time-entries>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl">
+      <h2>Week log report <a (click)=listTimeEntriesForWeek()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a></h2>
+    </div>
+  </div>
+  <app-time-entries *ngIf="timeEntries" [entries]="timeEntries" ></app-time-entries>
 </div>
