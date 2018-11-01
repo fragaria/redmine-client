@@ -4,14 +4,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as moment from 'moment';
 
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap, take } from 'rxjs/operators';
+import { catchError, map, tap, take, filter } from 'rxjs/operators';
 
 import { MessageService } from './message.service';
 import { SettingsService } from './settings.service';
 
 import { IssueList, Issue } from './models/issues';
 import { UserResponse, User } from './models/users';
-import { TimeEntryList, NewTimeEntry, TimeEntry } from './models/time-entries';
+import { TimeEntryList, NewTimeEntry, TimeEntry, DayLog } from './models/time-entries';
 import { TimeEntryActivityList, MessageType } from './models/enums';
 import { Field } from './models/fields';
 
@@ -116,7 +116,7 @@ export class RedmineService {
   }
 
   /**
-   * @param week - moment.HTML5_FMT.WEEK (YYYY-[W]WW) string, e.g. 2013-W06
+   * @param week - moment.HTML5_FMT.WEEK (YYYY-[W]WW) string, e.g. 2018-W06
    */
   listTimeEntriesForWeek(week: string): Observable<TimeEntryList> {
     const min = moment(week, moment.HTML5_FMT.WEEK).startOf("week").format("YYYY-MM-DD");
@@ -125,8 +125,53 @@ export class RedmineService {
     // debugger;
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
-        tap((issueList: TimeEntryList) => console.log(`${issueList.total_count} time entries found for the week.`)),
+        tap((entryList: TimeEntryList) => console.log(`${entryList.time_entries.length} time entries found for the week.`)),
         catchError(this.handleError<TimeEntryList>("Listing week time entries", new TimeEntryList()))
+      );
+  }
+
+  /**
+   * @param month - moment.HTML5_FMT.MONTH (YYYY-MM) string, e.g. 2018-04
+   */
+  listWorkingDayLogsForMonth(month: string): Observable<DayLog[]> {
+    let logMap = [];
+
+    let dateToProcess = moment(month, moment.HTML5_FMT.MONTH).endOf("month");
+    while(dateToProcess.format(moment.HTML5_FMT.MONTH) == month) {
+      // get previous working day if needed
+      if(dateToProcess.isoWeekday() > 5) {
+        dateToProcess.subtract((dateToProcess.isoWeekday() % 5), 'days');
+      }
+      let dateToProcessString = dateToProcess.format("YYYY-MM-DD");
+      logMap[dateToProcessString] = {
+        date: dateToProcessString,
+        dayOfWeek: dateToProcess.isoWeekday(),
+        timeEntries: new TimeEntryList(),
+        hoursLogged: 0
+      };
+      dateToProcess.subtract(1, 'days');
+    }
+
+    const min = moment(month, moment.HTML5_FMT.MONTH).startOf("month").format("YYYY-MM-DD");
+    const max = moment(month, moment.HTML5_FMT.MONTH).endOf("month").format("YYYY-MM-DD");
+    const url = this.timeEntriesPath + `?user_id=${this.currentUser.id}&spent_on=><${min}|${max}&limit=99`;
+
+    return this.http
+      .get<TimeEntryList>(url, this.httpOptions).pipe(
+        tap((entryList: TimeEntryList) => console.log(`Process ${entryList.time_entries.length} of ${entryList.total_count} time entries found for the month.`)),
+        map((entryList: TimeEntryList) => {
+          // debugger;
+          for(let entry of entryList.time_entries) {
+            if(logMap[entry.spent_on] !== undefined) {
+              logMap[entry.spent_on].timeEntries.time_entries.push(entry);
+              logMap[entry.spent_on].hoursLogged += entry.hours;
+            }
+          }
+          // TODO repeat if needed
+          return logMap;
+        }),
+        // TODO filter(dayLog => dayLog.hoursLogged != this.settings.get().dailyWorkingHours),
+        catchError(this.handleError<DayLog[]>("Searching for gaps", []))
       );
   }
 

@@ -14,6 +14,9 @@ import { IssueComponent } from './issue/issue.component';
 import { WeekLogComponent } from './week-log/week-log.component';
 import { MessagesComponent } from './messages/messages.component';
 import { SettingsComponent } from './settings/settings.component';
+import { GapsComponent } from './gaps/gaps.component';
+import { GapComponent } from './gap/gap.component';
+import { DailyTimeEntryComponent } from './daily-time-entry/daily-time-entry.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,10 @@ import { SettingsComponent } from './settings/settings.component';
     IssueComponent,
     WeekLogComponent,
     MessagesComponent,
-    SettingsComponent
+    SettingsComponent,
+    GapsComponent,
+    GapComponent,
+    DailyTimeEntryComponent
   ],
   imports: [
     BrowserModule,

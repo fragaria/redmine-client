@@ -1,0 +1,15 @@
+<div class="row">
+  <a class="col-xl-11" (click)="toggleLog()" style="cursor: pointer">
+    <h5>{{formatDayOfWeek(dayLog.dayOfWeek)}} {{dayLog.date}}: {{dayLog.hoursLogged}}</h5>
+  </a>
+  <a class="col-1 text-right" (click)="toggleLogTime()" style="cursor: pointer">
+    <span *ngIf="showNewLogForm; else hideLogTime">Logged</span>
+    <ng-template #hideLogTime><span>Record log</span></ng-template>
+  </a>
+</div>
+<div class="row" *ngIf="showNewLogForm">
+  <app-daily-time-entry class="col-xl" [day]="dayLog.date" [issues]="issues" (newEntry)="timeLogged($event)"></app-daily-time-entry>
+</div>
+<div class="row" *ngIf="showLog">
+  <app-time-entries class="col-xl" [entries]="dayLog.timeEntries" [showIssue]="true" [issues]="issues" [showDate]="false" ></app-time-entries>
+</div>

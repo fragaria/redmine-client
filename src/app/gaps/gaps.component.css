@@ -1,0 +1,12 @@
+.reload {
+  height: 1.3rem;
+}
+.gap-container {
+  padding: 8px 7px 4px 7px;
+}
+.gap-container:nth-child(even) {
+    background: #f3f4f5;
+}
+.gap-container:nth-child(odd) {
+    background: #ebeced;
+}

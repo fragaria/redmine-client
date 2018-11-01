@@ -3,8 +3,9 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">Redmine can be sexy, {{username}}</h5>
     <nav class="my-2 my-md-0 mr-md-3">
       <a routerLink="/issues" class="p-2 text-dark">Issues</a>
-      <a routerLink="/week" class="p-2 text-dark">Week</a>
-      <a class="p-2 text-muted" disabled="true">Gaps</a>
+      <a class="p-2 text-muted">Week</a>
+      <!-- <a routerLink="/week" disabled class="p-2 text-dark">Week</a> -->
+      <a routerLink="/gaps" class="p-2 text-dark">Gaps</a>
       <a routerLink="/settings" class="p-2 text-dark">Settings</a>
       <a (click)="logout()" class="btn btn-outline-primary">Logout</a>
     </nav>

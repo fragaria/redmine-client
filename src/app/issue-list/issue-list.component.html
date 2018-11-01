@@ -2,16 +2,17 @@
   <div class="row">
     <div class="col-xl-9">
       <h2>Your issues <span *ngIf="issues && issues.length != total_count">({{issues.length}}/{{total_count}}) </span>
-      <a (click)=getIssues()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a>
-    </h2>
+        <a (click)=getIssues()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a>
+      </h2>
+    </div>
+    <div class="col text-right text-muted">
+      <small class="mb-0">tap issue to toggle full log</small>
+    </div>
   </div>
-  <div class="col text-right text-muted">
-    <small class="mb-0">tap issue to toggle full log</small>
-  </div>
-</div>
 
-<div *ngIf="issues" class="container-fluid">
-  <div *ngFor="let issue of issues" class="issue-container">
-    <app-issue [issue]="issue" ></app-issue>
+  <div *ngIf="issues" class="container-fluid">
+    <div *ngFor="let issue of issues" class="issue-container">
+      <app-issue [issue]="issue" ></app-issue>
+    </div>
   </div>
 </div>

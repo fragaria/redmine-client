@@ -32,3 +32,10 @@ export class NewTimeEntry {
   activity_name: string;
   comments: string;
 };
+
+export class DayLog {
+  date: string;
+  dayOfWeek: number; // ISO,i.e. 1-7
+  timeEntries: TimeEntryList;
+  hoursLogged: number;
+}

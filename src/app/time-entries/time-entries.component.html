@@ -6,9 +6,11 @@
     <div class="col-lg-6">Comments</div>
   </div> -->
   <div class="row" *ngFor="let entry of entries.time_entries" [class.newEntry]="entry.isNew" >
-    <div class="col">{{entry.spent_on}}</div>
+    <div class="col" *ngIf="showDate">{{entry.spent_on}}</div>
+    <div class="col-4" *ngIf="showIssue">{{getIssueSubject(entry.issue.id)}}</div>
     <div class="col-1">{{entry.hours}}</div>
     <div class="col-2">{{entry.activity.name}}</div>
-    <div class="col-lg-7">{{entry.comments}}</div>
+    <div class="col-lg-7" *ngIf="showDate">{{entry.comments}}</div>
+    <div class="col-lg-5" *ngIf="showIssue">{{entry.comments}}</div>
   </div>
 </div>
