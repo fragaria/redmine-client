@@ -15,8 +15,8 @@ const routes: Routes = [
   { path: 'week', component: WeekLogComponent/*, data: {weekDate: moment()}*/},
   { path: 'gaps', component: GapsComponent},
   { path: 'settings', component: SettingsComponent},
-  { path: 'home', redirectTo: '/gaps'},
-  { path: '', redirectTo: '/week', pathMatch: 'full'}
+  { path: 'home', redirectTo: '/issues'},
+  { path: '', redirectTo: '/issues', pathMatch: 'full'}
 ];
 
 @NgModule({
