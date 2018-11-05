@@ -16,11 +16,9 @@ export class TimeEntryComponent implements OnInit {
   @Input() issueId: number;
   @Output() newEntry = new EventEmitter<TimeEntry>();
 
-  private commentMaxLength = 255;
-
-  private timeEntryForm: FormGroup;
-
-  private activities: Field[] = [];
+  public commentMaxLength = 255;
+  public timeEntryForm: FormGroup;
+  public activities: Field[] = [];
 
   constructor(
     private redmine: RedmineService,
@@ -53,7 +51,9 @@ export class TimeEntryComponent implements OnInit {
 
   createNewTimeEntry() {
     // debugger;
-    const activityId = (typeof this.timeEntryForm.value.activityId == "string") ? parseInt(this.timeEntryForm.value.activityId, 10) : this.timeEntryForm.value.activityId;
+    const activityId = (typeof this.timeEntryForm.value.activityId === 'string') ?
+      parseInt(this.timeEntryForm.value.activityId, 10) :
+      this.timeEntryForm.value.activityId;
     const activityName = this.redmine.getActivityById(activityId).name;
     const newTimeEntry = {
       issue_id: this.issueId,
@@ -64,7 +64,7 @@ export class TimeEntryComponent implements OnInit {
       comments: this.timeEntryForm.value.comment
     };
     this.redmine.createNewTimeEntry(newTimeEntry).subscribe(created => {
-      this.initTimeEntryForm()
+      this.initTimeEntryForm();
       this.newEntry.emit(created);
     });
   }

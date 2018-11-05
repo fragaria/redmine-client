@@ -19,11 +19,9 @@ export class DailyTimeEntryComponent implements OnInit {
   @Input() issues: Issue[];
   @Output() newEntry = new EventEmitter<TimeEntry>();
 
-  private commentMaxLength = 255;
-
-  private timeEntryForm: FormGroup;
-
-  private activities: Field[] = [];
+  public commentMaxLength = 255;
+  public timeEntryForm: FormGroup;
+  public activities: Field[] = [];
 
   constructor(
     private redmine: RedmineService,

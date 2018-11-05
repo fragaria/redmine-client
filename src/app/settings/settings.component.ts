@@ -14,7 +14,7 @@ import { Settings } from '../models/settings';
 export class SettingsComponent implements OnInit {
 
   settings: Settings;
-  private activities: Field[] = [];
+  public activities: Field[] = [];
 
   constructor(
     private settingsService: SettingsService,
