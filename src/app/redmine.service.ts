@@ -116,31 +116,25 @@ export class RedmineService {
   }
 
   /**
-   * @param week - moment.HTML5_FMT.WEEK (YYYY-[W]WW) string, e.g. 2018-W06
+   * @param weekOrMonth - moment.HTML5_FMT.WEEK (YYYY-[W]WW) string, e.g. 2018-W06
+   * or moment.HTML5_FMT.MONTH (YYYY-MM) string, e.g. 2018-04
+   * @param momentUnit - 'week' or 'month' supported
    */
-  listTimeEntriesForWeek(week: string): Observable<TimeEntryList> {
-    const min = moment(week, moment.HTML5_FMT.WEEK).startOf("week").format("YYYY-MM-DD");
-    const max = moment(week, moment.HTML5_FMT.WEEK).endOf("week").format("YYYY-MM-DD");
-    const url = this.timeEntriesPath + `?user_id=${this.currentUser.id}&spent_on=><${min}|${max}&limit=99`;
-    // debugger;
-    return this.http
-      .get<TimeEntryList>(url, this.httpOptions).pipe(
-        tap((entryList: TimeEntryList) => console.log(`${entryList.time_entries.length} time entries found for the week.`)),
-        catchError(this.handleError<TimeEntryList>("Listing week time entries", new TimeEntryList()))
-      );
-  }
-
-  /**
-   * @param month - moment.HTML5_FMT.MONTH (YYYY-MM) string, e.g. 2018-04
-   */
-  listWorkingDayLogsForMonth(month: string): Observable<DayLog[]> {
+  listWorkingDayLogs(weekOrMonth: string, momentUnit: string): Observable<DayLog[]> {
     let logMap = [];
+    // debugger;
 
-    let dateToProcess = moment(month, moment.HTML5_FMT.MONTH).endOf("month");
-    while(dateToProcess.format(moment.HTML5_FMT.MONTH) == month) {
+    const period = momentUnit as moment.unitOfTime.StartOf;
+    const html5fmt = momentUnit == 'week' ? 'YYYY-[W]WW' : 'YYYY-MM';
+
+    let dateToProcess = moment(weekOrMonth, html5fmt).endOf(period);
+    while(dateToProcess.format(html5fmt) == weekOrMonth) {
       // get previous working day if needed
       if(dateToProcess.isoWeekday() > 5) {
         dateToProcess.subtract((dateToProcess.isoWeekday() % 5), 'days');
+        if(dateToProcess.format(html5fmt) != weekOrMonth) {
+          break;
+        }
       }
       let dateToProcessString = dateToProcess.format("YYYY-MM-DD");
       logMap[dateToProcessString] = {
@@ -152,13 +146,13 @@ export class RedmineService {
       dateToProcess.subtract(1, 'days');
     }
 
-    const min = moment(month, moment.HTML5_FMT.MONTH).startOf("month").format("YYYY-MM-DD");
-    const max = moment(month, moment.HTML5_FMT.MONTH).endOf("month").format("YYYY-MM-DD");
+    const min = moment(weekOrMonth, html5fmt).startOf(period).format("YYYY-MM-DD");
+    const max = moment(weekOrMonth, html5fmt).endOf(period).format("YYYY-MM-DD");
     const url = this.timeEntriesPath + `?user_id=${this.currentUser.id}&spent_on=><${min}|${max}&limit=99`;
 
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
-        tap((entryList: TimeEntryList) => console.log(`Process ${entryList.time_entries.length} of ${entryList.total_count} time entries found for the month.`)),
+        tap((entryList: TimeEntryList) => console.log(`Process ${entryList.time_entries.length} of ${entryList.total_count} time entries found for the ${momentUnit}.`)),
         map((entryList: TimeEntryList) => {
           // debugger;
           for(let entry of entryList.time_entries) {

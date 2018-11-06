@@ -39,3 +39,8 @@ export class DayLog {
   timeEntries: TimeEntryList;
   hoursLogged: number;
 }
+
+export class Week {
+  weekNumber: number;
+  period: string;
+}

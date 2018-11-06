@@ -1,3 +1,12 @@
 .reload {
   height: 1.3rem;
 }
+.week-container {
+  padding: 8px 7px 4px 7px;
+}
+.week-container:nth-child(even) {
+    background: #f3f4f5;
+}
+.week-container:nth-child(odd) {
+    background: #ebeced;
+}

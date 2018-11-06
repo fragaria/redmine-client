@@ -42,7 +42,7 @@ export class GapsComponent implements OnInit {
   }
 
   listWorkingDayLogsForMonth() {
-    this.redmine.listWorkingDayLogsForMonth(this.monthDate.format(moment.HTML5_FMT.MONTH)).subscribe(dayLogs => {
+    this.redmine.listWorkingDayLogs(this.monthDate.format(moment.HTML5_FMT.MONTH), 'month').subscribe(dayLogs => {
       // debugger;
       this.dayLogs = dayLogs;
     });

@@ -31,6 +31,7 @@ export class GapComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.dailyWorkingHours = this.settings.get().dailyWorkingHours;
   }
 
   toggleLog() {
