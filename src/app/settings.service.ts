@@ -10,12 +10,18 @@ export class SettingsService {
   private settings: Settings;
   private defaultHoursKey = 'defaultHours';
   private defaultActivityNameKey = 'defaultActivityName';
+  private defaultIssueIdKey = 'defaultIssueId';
   private dailyWorkingHoursKey = 'dailyWorkingHours';
 
   constructor() {
+    this.initSettings();
+  }
+
+  initSettings() {
     this.settings = {
       defaultHours: this.getNumberFromLocalStorage(this.defaultHoursKey, 8),
       defaultActivityName: this.getStringFromLocalStorage(this.defaultActivityNameKey, 'Development'),
+      defaultIssueId: this.getNumberFromLocalStorage(this.defaultIssueIdKey, -1),
       dailyWorkingHours: this.getNumberFromLocalStorage(this.dailyWorkingHoursKey, 8)
     };
   }
@@ -42,8 +48,21 @@ export class SettingsService {
   save(settings: Settings) {
     // debugger;
     this.settings = settings;
-    localStorage.setItem(this.defaultHoursKey, settings.defaultHours.toString());
-    localStorage.setItem(this.defaultActivityNameKey, settings.defaultActivityName);
-    localStorage.setItem(this.dailyWorkingHoursKey, settings.dailyWorkingHours.toString());
+    this.saveState;
+  }
+
+  private saveState() {
+    localStorage.setItem(this.defaultHoursKey, this.settings.defaultHours.toString());
+    localStorage.setItem(this.defaultActivityNameKey, this.settings.defaultActivityName);
+    localStorage.setItem(this.defaultIssueIdKey, this.settings.defaultIssueId.toString());
+    localStorage.setItem(this.dailyWorkingHoursKey, this.settings.dailyWorkingHours.toString());
+  }
+
+  reset(): Settings {
+    // debugger;
+    localStorage.clear();
+    this.initSettings();
+    this.saveState();
+    return this.settings;
   }
 }

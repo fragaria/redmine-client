@@ -36,10 +36,11 @@ export class DailyTimeEntryComponent implements OnInit {
   }
 
   initTimeEntryForm() {
-    debugger;
+    // debugger;
     const defaultHours = this.settings.get().defaultHours;
+    const defaultIssueId = this.settings.get().defaultIssueId;
     this.timeEntryForm = this.formBuilder.group ({
-      issueId: [null, Validators.required],
+      issueId: [(defaultIssueId !== undefined && defaultIssueId != null) ? defaultIssueId : null, Validators.required],
       hours: [defaultHours, [Validators.required, Validators.min(0.25), Validators.max(24)]],
       activityId: [null, Validators.required],
       comment: ['', Validators.maxLength(this.commentMaxLength)]

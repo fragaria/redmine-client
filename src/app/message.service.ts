@@ -9,6 +9,7 @@ export class MessageService {
 
   private messages: string[] = [];
   private errors: string[] = [];
+  private infoMessageTimeout = 10000;
 
   constructor() { }
 
@@ -17,6 +18,10 @@ export class MessageService {
       this.errors.push(message);
     } else {
       this.messages.push(message);
+      let root = this;
+      setTimeout(function() {
+        root.remove(message);
+      }, this.infoMessageTimeout);
     }
   }
 

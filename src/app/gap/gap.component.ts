@@ -5,6 +5,7 @@ import { Issue } from '../models/issues';
 
 import { RedmineService } from '../redmine.service';
 import { MessageService } from '../message.service';
+import { SettingsService } from '../settings.service';
 
 @Component({
   selector: 'app-gap',
@@ -25,7 +26,8 @@ export class GapComponent implements OnInit {
 
   constructor(
     private redmine: RedmineService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private settings: SettingsService
   ) { }
 
   ngOnInit() {
@@ -50,6 +52,9 @@ export class GapComponent implements OnInit {
     }, this.newEntryTimeout);
     this.dayLog.timeEntries.time_entries.splice(0, 0, entry);
     this.dayLog.hoursLogged += entry.hours;
+    if(this.dayLog.hoursLogged == this.settings.get().dailyWorkingHours) {
+      this.messageService.add(`${this.formatDayOfWeek(this.dayLog.dayOfWeek)} ${this.dayLog.date} is fully logged.`);
+    }
   }
 
   formatDayOfWeek(num: number): string {
