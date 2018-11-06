@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+    rcli:
+        build: .
+        ports:
+            - "8080:80"
+        restart: always
+        environment:
+            RCLI_REDMINE_HOST: fraga-redmine.f-app.it
+
