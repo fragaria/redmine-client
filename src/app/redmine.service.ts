@@ -11,7 +11,7 @@ import { SettingsService } from './settings.service';
 
 import { IssueList, Issue } from './models/issues';
 import { UserResponse, User } from './models/users';
-import { TimeEntryList, NewTimeEntry, TimeEntry, DayLog } from './models/time-entries';
+import { TimeEntryList, NewTimeEntry, TimeEntry, DayLog, WeekLog } from './models/time-entries';
 import { TimeEntryActivityList, MessageType } from './models/enums';
 import { Field } from './models/fields';
 
@@ -116,21 +116,22 @@ export class RedmineService {
   }
 
   /**
+   * List logs for working days (Monday - Friday) in the given week or month. Returns descending list.
    * @param weekOrMonth - moment.HTML5_FMT.WEEK (YYYY-[W]WW) string, e.g. 2018-W06
    * or moment.HTML5_FMT.MONTH (YYYY-MM) string, e.g. 2018-04
    * @param momentUnit - 'week' or 'month' supported
    */
-  listWorkingDayLogs(weekOrMonth: string, momentUnit: string): Observable<DayLog[]> {
+  listDayLogs(weekOrMonth: string, momentUnit: string, onlyWorkingDays: boolean = true, desc: boolean = true): Observable<DayLog[]> {
     let logMap = [];
     // debugger;
 
     const period = momentUnit as moment.unitOfTime.StartOf;
     const html5fmt = momentUnit == 'week' ? 'YYYY-[W]WW' : 'YYYY-MM';
 
-    let dateToProcess = moment(weekOrMonth, html5fmt).endOf(period);
+    let dateToProcess = desc ? moment(weekOrMonth, html5fmt).endOf(period) : moment(weekOrMonth, html5fmt).startOf(period);
     while(dateToProcess.format(html5fmt) == weekOrMonth) {
       // get previous working day if needed
-      if(dateToProcess.isoWeekday() > 5) {
+      if(onlyWorkingDays && dateToProcess.isoWeekday() > 5) {
         dateToProcess.subtract((dateToProcess.isoWeekday() % 5), 'days');
         if(dateToProcess.format(html5fmt) != weekOrMonth) {
           break;
@@ -143,7 +144,11 @@ export class RedmineService {
         timeEntries: new TimeEntryList(),
         hoursLogged: 0
       };
-      dateToProcess.subtract(1, 'days');
+      if(desc) {
+        dateToProcess.subtract(1, 'days');
+      } else {
+        dateToProcess.add(1, 'days');
+      }
     }
 
     const min = moment(weekOrMonth, html5fmt).startOf(period).format("YYYY-MM-DD");
@@ -152,7 +157,7 @@ export class RedmineService {
 
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
-        tap((entryList: TimeEntryList) => console.log(`Process ${entryList.time_entries.length} of ${entryList.total_count} time entries found for the ${momentUnit}.`)),
+        tap((entryList: TimeEntryList) => console.log(`Process ${entryList.time_entries.length} of ${entryList.total_count} time entries found for the ${period}.`)),
         map((entryList: TimeEntryList) => {
           // debugger;
           for(let entry of entryList.time_entries) {
@@ -164,9 +169,48 @@ export class RedmineService {
           // TODO repeat if needed
           return logMap;
         }),
+        map((logMap: DayLog[]) => { // map from associative array to numberred
+          let result = [];
+          for(let key in logMap) {
+            result.push(logMap[key]);
+          }
+          return result;
+        }),
         // TODO filter(dayLog => dayLog.hoursLogged != this.settings.get().dailyWorkingHours),
-        catchError(this.handleError<DayLog[]>("Searching for gaps", []))
+        catchError(this.handleError<DayLog[]>('Listing daily logs', []))
       );
+  }
+
+  /**
+   * @param month - moment.HTML5_FMT.MONTH (YYYY-MM) string, e.g. 2018-04
+   */
+  listWeekLogs(month: string): Observable<WeekLog[]> {
+    let mmt = moment(month, moment.HTML5_FMT.MONTH).startOf('month');
+    return this.listDayLogs(month, 'month', false, false).pipe(
+      map((workingDayLogs : DayLog[]) => {
+        let offset = 0;
+        let weekLogs: WeekLog[] = [];
+        do {
+          const weekNumber = mmt.isoWeek();
+          let weekLog = {
+            weekNumber: weekNumber,
+            startsWith: mmt.isoWeekday(),
+            numberOfWorkingDays: 0,
+            dayLogs: []
+          };
+          // debugger;
+          do {
+            weekLog.dayLogs.push(workingDayLogs[offset]);
+            weekLog.numberOfWorkingDays++;
+            offset++;
+          } while(offset < workingDayLogs.length && workingDayLogs[offset].dayOfWeek > 1);
+          weekLogs.push(weekLog);
+          mmt.add(1, 'weeks').startOf('week');
+        } while (mmt.format(moment.HTML5_FMT.MONTH) == month);
+        return weekLogs;
+      }),
+      catchError(this.handleError<WeekLog[]>("Listing week logs in the month", []))
+    );
   }
 
   getActivitiesEnum(): Observable<Field[]> {

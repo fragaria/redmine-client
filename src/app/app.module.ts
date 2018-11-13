@@ -17,6 +17,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { GapsComponent } from './gaps/gaps.component';
 import { GapComponent } from './gap/gap.component';
 import { DailyTimeEntryComponent } from './daily-time-entry/daily-time-entry.component';
+import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarItemComponent } from './calendar-item/calendar-item.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { DailyTimeEntryComponent } from './daily-time-entry/daily-time-entry.com
     SettingsComponent,
     GapsComponent,
     GapComponent,
-    DailyTimeEntryComponent
+    DailyTimeEntryComponent,
+    CalendarComponent,
+    CalendarItemComponent
   ],
   imports: [
     BrowserModule,

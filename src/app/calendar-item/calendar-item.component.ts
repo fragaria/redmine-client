@@ -9,11 +9,11 @@ import { SettingsService } from '../settings.service';
 import { UtilService } from '../util.service';
 
 @Component({
-  selector: 'app-gap',
-  templateUrl: './gap.component.html',
-  styleUrls: ['./gap.component.css']
+  selector: 'app-calendar-item',
+  templateUrl: './calendar-item.component.html',
+  styleUrls: ['./calendar-item.component.css']
 })
-export class GapComponent implements OnInit {
+export class CalendarItemComponent implements OnInit {
 
   @Input() issues: Issue[];
   @Input() dayLog: DayLog;

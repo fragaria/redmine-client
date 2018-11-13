@@ -57,7 +57,7 @@ export class WeekLogComponent implements OnInit {
   }
 
   listWorkingDayLogsForWeek() {
-    this.redmine.listWorkingDayLogs(this.weekDate.format(moment.HTML5_FMT.WEEK), 'week').subscribe(dayLogs => {
+    this.redmine.listDayLogs(this.weekDate.format(moment.HTML5_FMT.WEEK), 'week').subscribe(dayLogs => {
       // debugger;
       this.dayLogs = dayLogs;
     });

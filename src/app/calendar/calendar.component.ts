@@ -6,20 +6,19 @@ import { MessageService } from '../message.service';
 import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
 
-import { TimeEntryList, TimeEntry, DayLog } from '../models/time-entries';
+import { WeekLog } from '../models/time-entries';
 import { Issue } from '../models/issues';
 
 @Component({
-  selector: 'app-gaps',
-  templateUrl: './gaps.component.html',
-  styleUrls: ['./gaps.component.css']
+  selector: 'app-calendar',
+  templateUrl: './calendar.component.html',
+  styleUrls: ['./calendar.component.css']
 })
-export class GapsComponent implements OnInit {
-
+export class CalendarComponent implements OnInit {
   monthDate = moment();
 
   issues: Issue[];
-  dayLogs: DayLog[];
+  weekLogs: WeekLog[] = [];
 
   dailyWorkingHours: number;
 
@@ -32,7 +31,7 @@ export class GapsComponent implements OnInit {
   ngOnInit() {
     this.dailyWorkingHours = this.settings.get().dailyWorkingHours;
     this.getIssues();
-    this.listWorkingDayLogsForMonth();
+    this.listWorkingWeekLogs();
   }
 
   getIssues() {
@@ -41,16 +40,16 @@ export class GapsComponent implements OnInit {
     });
   }
 
-  listWorkingDayLogsForMonth() {
-    this.redmine.listDayLogs(this.monthDate.format(moment.HTML5_FMT.MONTH), 'month').subscribe(dayLogs => {
+  listWorkingWeekLogs() {
+    this.redmine.listWeekLogs(this.monthDate.format(moment.HTML5_FMT.MONTH)).subscribe(weekLogs => {
       // debugger;
-      this.dayLogs = dayLogs;
+      this.weekLogs = weekLogs;
     });
   }
 
   setMonth(month: string) {
     this.monthDate.month(month);
-    this.listWorkingDayLogsForMonth();
+    this.listWorkingWeekLogs();
   }
 
   months(): string[] {
@@ -59,5 +58,25 @@ export class GapsComponent implements OnInit {
       months.push(moment().subtract(i, 'months').format('MMMM'));
     }
     return months;
+  }
+
+  skippedWorkingDays(weekLog: WeekLog): number[] {
+    let result = [];
+    if(weekLog.startsWith != 1) {
+      for(let i = weekLog.numberOfWorkingDays; i < 7 ; i++) {
+        result.push(i);
+      }
+    }
+    return result;
+  }
+
+  missingWorkingDays(weekLog: WeekLog): number[] {
+    let result = [];
+    if(weekLog.startsWith == 1) {
+      for(let i = weekLog.numberOfWorkingDays; i < 7 ; i++) {
+        result.push(i);
+      }
+    }
+    return result;
   }
 }
