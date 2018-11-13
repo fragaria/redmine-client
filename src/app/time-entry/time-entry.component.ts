@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+import * as moment from 'moment';
+
 import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
 import { Field } from '../models/fields';
@@ -34,7 +36,8 @@ export class TimeEntryComponent implements OnInit {
     // debugger;
     const defaultHours = this.settings.get().defaultHours;
     this.timeEntryForm = this.formBuilder.group ({
-      from: [(new Date()).toISOString().substring(0, 10), Validators.required],
+      from: [moment().format('YYYY-MM-DD'), Validators.required],
+      // from: [(new Date()).toISOString().substring(0, 10), Validators.required],
       hours: [defaultHours, [Validators.required, Validators.min(0.25), Validators.max(24)]],
       activityId: [null, Validators.required],
       comment: ['', Validators.maxLength(this.commentMaxLength)]
@@ -57,7 +60,7 @@ export class TimeEntryComponent implements OnInit {
     const activityName = this.redmine.getActivityById(activityId).name;
     const newTimeEntry = {
       issue_id: this.issueId,
-      spent_on: this.timeEntryForm.value.from,
+      spent_on: moment(this.timeEntryForm.value.from).format('YYYY-MM-DD'),
       hours: this.timeEntryForm.value.hours,
       activity_id: activityId,
       activity_name: activityName,
