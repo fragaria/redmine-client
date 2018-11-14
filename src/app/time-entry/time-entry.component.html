@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <!-- <div *ngIf="timeEntryForm.status == 'INVALID'"> Form status: {{timeEntryForm.status}}</div> -->
-  <form [formGroup]="timeEntryForm" (ngSubmit)="createNewTimeEntry()">
+  <form [formGroup]="timeEntryForm" (ngSubmit)="createNewTimeEntry()" >
     <div class="row">
       <label class="col" for="from">Spent on:</label>
       <label class="col-1" for="hours">Hours:</label>
@@ -12,8 +12,17 @@
 
     <div class="row">
       <div class="col">
-        <!-- <input id="from" type="date"  class="form-control" style="min-width: 140px" /> -->
-        <input id="from" formControlName="from" required bsDatepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue' }" class="form-control" style="min-width: 140px" placeholder="YYYY-MM-DD" >
+        <div class="input-group">
+          <!-- <input id="from" type="date"  class="form-control" style="min-width: 140px" /> -->
+          <input id="from" *ngIf="!logPeriod" formControlName="from" required bsDatepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue' }" class="form-control" style="min-width: 106px" placeholder="YYYY-MM-DD" placement="right">
+          <input id="from" *ngIf="logPeriod" formControlName="period" required bsDaterangepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue' }" class="form-control" style="min-width: 196px" placeholder="YYYY-MM-DD - YYYY-MM-DD" placement="right">
+          <span class="input-group-btn">
+            <button type="button" (click)="toggleLogPeriod()" class="btn input-group-text" tooltip="{{logPeriod ? 'Log single day' : 'Log period'}}">
+              <span *ngIf="logPeriod">o</span>
+              <span *ngIf="!logPeriod">&lt; &gt;</span>
+            </button>
+          </span>
+        </div>
       </div>
       <div class="col-1">
         <input id="hours" type="number" formControlName="hours" length="2" min="0.25" max="24" step="0.25" required class="form-control" style="min-width: 80px "/>
@@ -27,7 +36,7 @@
         <input id="comment" type="text" formControlName="comment" maxlength="{{commentMaxLength}}" class="form-control"/>
       </div>
       <div class="col-1">
-        <button type="submit" [disabled]="!timeEntryForm.valid" class="btn btn-lg btn-primary">Submit</button>
+        <button type="submit" [disabled]="!timeEntryForm.valid" class="btn btn-primary">Submit</button>
       </div>
     </div>
   </form>

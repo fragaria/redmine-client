@@ -1,8 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xl-10">
-      <h2>Montly log <a (click)=listWorkingWeekLogs()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a>
-    </h2>
+      <h2>Montly log <a (click)=listWorkingWeekLogs()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a></h2>
     </div>
     <div class="col-2 align-right">
       <select class="custom-select d-block w-100" (change)="setMonth($event.target.value)">
@@ -11,37 +10,56 @@
     </div>
   </div>
   <div class="container-fluid">
-    <div class="card-deck">
-      <div class="card">
-        <h5 class="card-title">Monday</h5>
+    <div class="card-deck mb-3">
+      <div class="card text-white bg-secondary">
+        <div class="card-body">
+          <h5 class="card-title">Monday</h5>
+        </div>
       </div>
-      <div class="card">
-        <h5 class="card-title">Tuesday</h5>
+      <div class="card text-white bg-secondary">
+        <div class="card-body">
+          <h5 class="card-title">Tuesday</h5>
+        </div>
       </div>
-      <div class="card">
-        <h5 class="card-title">Wednesday</h5>
+      <div class="card text-white bg-secondary">
+        <div class="card-body">
+          <h5 class="card-title">Wednesday</h5>
+        </div>
       </div>
-      <div class="card">
-        <h5 class="card-title">Thursday</h5>
+      <div class="card text-white bg-secondary">
+        <div class="card-body">
+          <h5 class="card-title">Thursday</h5>
+        </div>
       </div>
-      <div class="card">
-        <h5 class="card-title">Friday</h5>
+      <div class="card text-white bg-secondary">
+        <div class="card-body">
+          <h5 class="card-title">Friday</h5>
+        </div>
       </div>
-      <div class="card">
-        <h5 class="card-title">Saturday</h5>
+      <div class="card text-white bg-secondary">
+        <div class="card-body">
+          <h5 class="card-title">Saturday</h5>
+        </div>
       </div>
-      <div class="card">
-        <h5 class="card-title">Sunday</h5>
+      <div class="card text-white bg-secondary">
+        <div class="card-body">
+          <h5 class="card-title">Sunday</h5>
+        </div>
       </div>
     </div>
 
-    <div *ngFor="let weekLog of weekLogs" class="card-deck">
+    <div *ngFor="let weekLog of weekLogs" class="card-deck mb-3">
 
       <div *ngFor="let skipped of skippedWorkingDays(weekLog)" class="card">
       </div>
 
       <ng-container *ngFor="let dayLog of weekLog.dayLogs">
-        <div class="card">
+        <div class="card" [ngClass]="{
+          'border-primary': ((dayLog.dayOfWeek < 6 && dayLog.hoursLogged > dailyWorkingHours) || dayLog.dayOfWeek > 5),
+          'border-success': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged == dailyWorkingHours),
+          'border-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours),
+          'border-secondary': (dayLog.dayOfWeek > 5 && dayLog.hoursLogged == 0)
+        }">
           <app-calendar-item [issues]="issues" [dayLog]="dayLog" ></app-calendar-item>
         </div>
       </ng-container>
