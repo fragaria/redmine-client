@@ -24,7 +24,7 @@ export class IssueListComponent implements OnInit {
   }
 
   getIssues() {
-    this.redmine.listMyIssues().subscribe(issueList => {
+    this.redmine.listMyIssues(true).subscribe(issueList => {
       this.issues = issueList.issues;
       this.total_count = issueList.total_count;
       this.offset = issueList.offset;

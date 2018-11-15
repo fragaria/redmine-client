@@ -28,7 +28,7 @@ export class SettingsComponent implements OnInit {
     this.settings = this.settingsService.get();
     this.redmine.getActivitiesEnum().subscribe((activities: Field[]) => {
       this.activities = activities;
-      this.redmine.listMyIssues().subscribe(issueList => this.issues = issueList.issues);
+      this.redmine.listMyIssues(true).subscribe(issueList => this.issues = issueList.issues);
       // // debugger;
       // this.redmine.getDefaultActivity().subscribe((defaultActivity: Field) => {
       //   // debugger;

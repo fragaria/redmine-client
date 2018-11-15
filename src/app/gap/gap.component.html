@@ -8,8 +8,8 @@
   </a>
 </div>
 <div class="row" *ngIf="showNewLogForm">
-  <app-daily-time-entry class="col-xl" [day]="dayLog.date" [issues]="issues" (newEntry)="timeLogged($event)"></app-daily-time-entry>
+  <app-daily-time-entry class="col-xl" [day]="dayLog.date" (newEntry)="timeLogged($event)"></app-daily-time-entry>
 </div>
 <div class="row" *ngIf="showLog">
-  <app-time-entries class="col-xl" [entries]="dayLog.timeEntries" [showIssue]="true" [issues]="issues" [showDate]="false" ></app-time-entries>
+  <app-time-entries class="col-xl" [entries]="dayLog.timeEntries" [showIssue]="true" [showDate]="false" ></app-time-entries>
 </div>

@@ -13,7 +13,7 @@
   <div class="container-fluid">
     <ng-container *ngFor="let dayLog of dayLogs | keyvalue">
       <div class="week-container">
-        <app-gap [issues]="issues" [dayLog]="dayLog.value" ></app-gap>
+        <app-gap [dayLog]="dayLog.value" ></app-gap>
       </div>
     </ng-container>
   </div>

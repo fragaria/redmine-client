@@ -22,6 +22,7 @@ export class RedmineService {
 
   private currentUserPath = "/api/users/current.json";
   private myIssuesPath = "/api/issues.json?assigned_to_id=me";
+  private issuesPathBase = "/api/issues";
   private timeEntriesPath = "/api/time_entries.json";
   private activitiesEnumPath = "/api/enumerations/time_entry_activities.json";
 
@@ -31,6 +32,8 @@ export class RedmineService {
   private activitiesEnum: Field[];
   private activitiesMap: Map<number, Field> = new Map();
   private defaultActivity: Field;
+  private myIssues: IssueList = new IssueList();
+  private myIssuesValidUntil = moment();
   private issuesMap: Map<number, Issue> = new Map();
 
   private httpOptions = {
@@ -67,28 +70,33 @@ export class RedmineService {
   /**
    * https://www.redmine.org/projects/redmine/wiki/Rest_Issues
    */
-  listMyIssues(): Observable<IssueList> {
-    // debugger;
-    return this.http
-      .get<IssueList>(this.myIssuesPath, this.httpOptions).pipe(
-        tap((issueList: IssueList) => {
-          console.log(`${issueList.total_count} issues found.`);
-          // debugger;
-          for(let issue of issueList.issues) {
-            this.issuesMap.set(issue.id, issue);
-          }
-        }),
-        catchError(this.handleError<IssueList>("Listing your issues", new IssueList()))
-      );
+  listMyIssues(noCache:boolean = false): Observable<IssueList> {
+    if(noCache || this.myIssues.issues.length == 0) {
+      // debugger;
+      return this.http
+        .get<IssueList>(this.myIssuesPath, this.httpOptions).pipe(
+          tap((issueList: IssueList) => {
+            console.log(`${issueList.total_count} issues found.`);
+            // debugger;
+            this.myIssues = issueList;
+            for(let issue of issueList.issues) {
+              this.issuesMap.set(issue.id, issue);
+            }
+          }),
+          catchError(this.handleError<IssueList>("Listing your issues", new IssueList()))
+        );
+      } else {
+        return of(this.myIssues);
+      }
   }
 
   getIssueById(id: number): Observable<Issue> {
     if(this.issuesMap.has(id)) {
       return of(this.issuesMap.get(id));
     } else {
-      const url = this.timeEntriesPath + `/issues/${id}.json`;
+      const url = this.issuesPathBase + `/${id}.json`;
       return this.http.get<Issue>(url, this.httpOptions).pipe(
-        // map(issue => issue.issue),
+        map(response => response.issue),
         tap(issue => this.issuesMap.set(issue.id, issue)),
         catchError(this.handleError<Issue>("Obtaining issue by ID"))
       )

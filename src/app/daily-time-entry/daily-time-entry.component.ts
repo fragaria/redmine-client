@@ -4,8 +4,8 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
 
-import { Issue } from '../models/issues';
 import { Field } from '../models/fields';
+import { Issue, IssueList } from '../models/issues';
 import { NewTimeEntry, TimeEntry } from '../models/time-entries';
 
 @Component({
@@ -16,11 +16,11 @@ import { NewTimeEntry, TimeEntry } from '../models/time-entries';
 export class DailyTimeEntryComponent implements OnInit {
 
   @Input() day: string;
-  @Input() issues: Issue[];
   @Output() newEntry = new EventEmitter<TimeEntry>();
 
   public commentMaxLength = 255;
   public timeEntryForm: FormGroup;
+  public issues = [];
   public activities: Field[] = [];
 
   constructor(
@@ -49,6 +49,9 @@ export class DailyTimeEntryComponent implements OnInit {
       this.redmine.getDefaultActivity().subscribe((defaultActivity: Field) => {
         // debugger;
         this.timeEntryForm.patchValue({activityId: defaultActivity.id});
+        this.redmine.listMyIssues().subscribe(issueList => {
+          this.issues = issueList.issues;
+        });
       });
     });
   }

@@ -7,7 +7,6 @@ import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
 
 import { TimeEntryList, TimeEntry, DayLog } from '../models/time-entries';
-import { Issue } from '../models/issues';
 
 @Component({
   selector: 'app-gaps',
@@ -18,7 +17,6 @@ export class GapsComponent implements OnInit {
 
   monthDate = moment();
 
-  issues: Issue[];
   dayLogs: DayLog[];
 
   dailyWorkingHours: number;
@@ -31,14 +29,7 @@ export class GapsComponent implements OnInit {
 
   ngOnInit() {
     this.dailyWorkingHours = this.settings.get().dailyWorkingHours;
-    this.getIssues();
     this.listWorkingDayLogsForMonth();
-  }
-
-  getIssues() {
-    this.redmine.listMyIssues().subscribe(issueList => {
-      this.issues = issueList.issues;
-    });
   }
 
   listWorkingDayLogsForMonth() {

@@ -7,7 +7,7 @@
   </div> -->
   <div class="row" *ngFor="let entry of entries.time_entries" [class.newEntry]="entry.isNew" >
     <div class="col" *ngIf="showDate">{{entry.spent_on}}</div>
-    <div class="col-4" *ngIf="showIssue">{{getIssueSubject(entry.issue.id)}}</div>
+    <div class="col-4" *ngIf="showIssue"><app-issue-label [issueId]="entry.issue.id"></app-issue-label></div>
     <div class="col-1 text-right">{{entry.hours | number:'1.2-2'}}</div>
     <div class="col-2">{{entry.activity.name}}</div>
     <div class="col-lg-7" *ngIf="showDate">{{entry.comments}}</div>

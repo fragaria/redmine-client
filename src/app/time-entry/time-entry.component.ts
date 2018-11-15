@@ -66,8 +66,8 @@ export class TimeEntryComponent implements OnInit {
       this.timeEntryForm.value.activityId;
     const activityName = this.redmine.getActivityById(activityId).name;
     this.saving = true;
-    this.timeEntryForm.disable();
     if(this.logPeriod) {
+      this.timeEntryForm.disable();
       let to = moment(this.timeEntryForm.value.period[1]).format('YYYY-MM-DD');
       let createActions = [];
       for(let mmt = moment(this.timeEntryForm.value.period[0]); mmt.format('YYYY-MM-DD') <= to; mmt.add(1, 'days')) {

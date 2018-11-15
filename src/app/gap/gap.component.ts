@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { TimeEntryList, TimeEntry, DayLog } from '../models/time-entries';
-import { Issue } from '../models/issues';
 
 import { RedmineService } from '../redmine.service';
 import { MessageService } from '../message.service';
@@ -15,7 +14,6 @@ import { UtilService } from '../util.service';
 })
 export class GapComponent implements OnInit {
 
-  @Input() issues: Issue[];
   @Input() dayLog: DayLog;
 
   dailyWorkingHours: number;

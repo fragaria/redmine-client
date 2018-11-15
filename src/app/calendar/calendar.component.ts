@@ -7,7 +7,6 @@ import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
 
 import { WeekLog } from '../models/time-entries';
-import { Issue } from '../models/issues';
 
 @Component({
   selector: 'app-calendar',
@@ -17,7 +16,6 @@ import { Issue } from '../models/issues';
 export class CalendarComponent implements OnInit {
   monthDate = moment();
 
-  issues: Issue[];
   weekLogs: WeekLog[] = [];
 
   dailyWorkingHours: number;
@@ -30,14 +28,7 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
     this.dailyWorkingHours = this.settings.get().dailyWorkingHours;
-    this.getIssues();
     this.listWorkingWeekLogs();
-  }
-
-  getIssues() {
-    this.redmine.listMyIssues().subscribe(issueList => {
-      this.issues = issueList.issues;
-    });
   }
 
   listWorkingWeekLogs() {

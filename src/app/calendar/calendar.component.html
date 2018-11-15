@@ -60,7 +60,7 @@
           'border-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours),
           'border-secondary': (dayLog.dayOfWeek > 5 && dayLog.hoursLogged == 0)
         }">
-          <app-calendar-item [issues]="issues" [dayLog]="dayLog" ></app-calendar-item>
+          <app-calendar-item [dayLog]="dayLog" ></app-calendar-item>
         </div>
       </ng-container>
 

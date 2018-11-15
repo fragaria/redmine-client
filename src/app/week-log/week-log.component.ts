@@ -7,7 +7,6 @@ import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
 
 import { DayLog, Week } from '../models/time-entries';
-import { Issue } from '../models/issues';
 
 @Component({
   selector: 'app-week-log',
@@ -19,7 +18,6 @@ export class WeekLogComponent implements OnInit {
   weekDate = moment();
   weeks = [];
 
-  issues: Issue[];
   dayLogs: DayLog[];
 
   dailyWorkingHours: number;
@@ -33,7 +31,6 @@ export class WeekLogComponent implements OnInit {
   ngOnInit() {
     this.initWeeks();
     this.dailyWorkingHours = this.settings.get().dailyWorkingHours;
-    this.getIssues();
     this.listWorkingDayLogsForWeek();
   }
 
@@ -48,12 +45,6 @@ export class WeekLogComponent implements OnInit {
        period: `${weekNumber}. week: ${min} - ${max}`
      });
     }
-  }
-
-  getIssues() {
-    this.redmine.listMyIssues().subscribe(issueList => {
-      this.issues = issueList.issues;
-    });
   }
 
   listWorkingDayLogsForWeek() {

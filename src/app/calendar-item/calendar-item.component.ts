@@ -1,9 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { TimeEntryList, TimeEntry, DayLog } from '../models/time-entries';
-import { Issue } from '../models/issues';
 
-import { RedmineService } from '../redmine.service';
 import { MessageService } from '../message.service';
 import { SettingsService } from '../settings.service';
 import { UtilService } from '../util.service';
@@ -15,7 +13,6 @@ import { UtilService } from '../util.service';
 })
 export class CalendarItemComponent implements OnInit {
 
-  @Input() issues: Issue[];
   @Input() dayLog: DayLog;
 
   dailyWorkingHours: number;
@@ -25,8 +22,9 @@ export class CalendarItemComponent implements OnInit {
 
   newEntryTimeout = 10000;
 
+  timeEntries = [];
+
   constructor(
-    private redmine: RedmineService,
     private messageService: MessageService,
     private settings: SettingsService,
     private utils: UtilService
@@ -34,6 +32,9 @@ export class CalendarItemComponent implements OnInit {
 
   ngOnInit() {
     this.dailyWorkingHours = this.settings.get().dailyWorkingHours;
+    if(this.dayLog.timeEntries !== undefined && this.dayLog.timeEntries != null) {
+      this.timeEntries = this.dayLog.timeEntries.time_entries;
+    }
   }
 
   toggleLog() {

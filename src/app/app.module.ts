@@ -22,6 +22,7 @@ import { GapComponent } from './gap/gap.component';
 import { DailyTimeEntryComponent } from './daily-time-entry/daily-time-entry.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarItemComponent } from './calendar-item/calendar-item.component';
+import { IssueLabelComponent } from './issue-label/issue-label.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { CalendarItemComponent } from './calendar-item/calendar-item.component';
     GapComponent,
     DailyTimeEntryComponent,
     CalendarComponent,
-    CalendarItemComponent
+    CalendarItemComponent,
+    IssueLabelComponent
   ],
   imports: [
     BrowserModule,
