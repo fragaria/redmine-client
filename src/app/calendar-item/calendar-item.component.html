@@ -5,11 +5,11 @@
     'text-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours),
     'text-secondary': (dayLog.dayOfWeek > 5 && dayLog.hoursLogged == 0)
   }">{{dayLog.date}}</h5>
-  <div class="card-text">
-    <span *ngFor="let entry of timeEntries" class="d-block text-truncate small"><app-issue-label [issueId]="entry.issue.id"></app-issue-label></span>
-  </div>
+  <p class="card-text">
+    <span *ngFor="let entry of timeEntries" class="small d-block text-truncate">{{entry.hours}}h&nbsp;<app-issue-label [issueId]="entry.issue.id"></app-issue-label></span>
+  </p>
 </div>
-<div class="card-footer text-white" [ngClass]="{
+<div class="card-footer text-white bottom-align-text" [ngClass]="{
   'bg-primary': ((dayLog.dayOfWeek < 6 && dayLog.hoursLogged > dailyWorkingHours) || dayLog.dayOfWeek > 5),
   'bg-success': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged == dailyWorkingHours),
   'bg-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours),

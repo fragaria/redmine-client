@@ -54,7 +54,7 @@
       </div>
 
       <ng-container *ngFor="let dayLog of weekLog.dayLogs">
-        <div class="card" [ngClass]="{
+        <div class="card h-100" [ngClass]="{
           'border-primary': ((dayLog.dayOfWeek < 6 && dayLog.hoursLogged > dailyWorkingHours) || dayLog.dayOfWeek > 5),
           'border-success': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged == dailyWorkingHours),
           'border-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours),
