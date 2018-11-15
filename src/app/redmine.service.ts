@@ -96,7 +96,7 @@ export class RedmineService {
     } else {
       const url = this.issuesPathBase + `/${id}.json`;
       return this.http.get<Issue>(url, this.httpOptions).pipe(
-        map(response => response.issue),
+        map((response: {issue: Issue} ) => response.issue),
         tap(issue => this.issuesMap.set(issue.id, issue)),
         catchError(this.handleError<Issue>("Obtaining issue by ID"))
       )
