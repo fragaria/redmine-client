@@ -129,7 +129,7 @@ export class RedmineService {
    * or moment.HTML5_FMT.MONTH (YYYY-MM) string, e.g. 2018-04
    * @param momentUnit - 'week' or 'month' supported
    */
-  listDayLogs(weekOrMonth: string, momentUnit: string, onlyWorkingDays: boolean = true, desc: boolean = true): Observable<DayLog[]> {
+  listDayLogs(weekOrMonth: string, momentUnit: string, includeFuture: boolean = true, onlyWorkingDays: boolean = true, desc: boolean = true): Observable<DayLog[]> {
     let logMap = [];
     // debugger;
 
@@ -137,21 +137,19 @@ export class RedmineService {
     const html5fmt = momentUnit == 'week' ? 'YYYY-[W]WW' : 'YYYY-MM';
 
     let dateToProcess = desc ? moment(weekOrMonth, html5fmt).endOf(period) : moment(weekOrMonth, html5fmt).startOf(period);
+    const now = moment();
     while(dateToProcess.format(html5fmt) == weekOrMonth) {
-      // get previous working day if needed
-      if(onlyWorkingDays && dateToProcess.isoWeekday() > 5) {
-        dateToProcess.subtract((dateToProcess.isoWeekday() % 5), 'days');
-        if(dateToProcess.format(html5fmt) != weekOrMonth) {
-          break;
-        }
+      if((includeFuture || dateToProcess.isBefore(now, 'day') || dateToProcess.isSame(now, 'day')) // skip if future
+          && (!onlyWorkingDays || dateToProcess.isoWeekday() < 6))  // skip non working day if needed
+      {
+        let dateToProcessString = dateToProcess.format("YYYY-MM-DD");
+        logMap[dateToProcessString] = {
+          date: dateToProcessString,
+          dayOfWeek: dateToProcess.isoWeekday(),
+          timeEntries: new TimeEntryList(),
+          hoursLogged: 0
+        };
       }
-      let dateToProcessString = dateToProcess.format("YYYY-MM-DD");
-      logMap[dateToProcessString] = {
-        date: dateToProcessString,
-        dayOfWeek: dateToProcess.isoWeekday(),
-        timeEntries: new TimeEntryList(),
-        hoursLogged: 0
-      };
       if(desc) {
         dateToProcess.subtract(1, 'days');
       } else {
@@ -194,7 +192,7 @@ export class RedmineService {
    */
   listWeekLogs(month: string): Observable<WeekLog[]> {
     let mmt = moment(month, moment.HTML5_FMT.MONTH).startOf('month');
-    return this.listDayLogs(month, 'month', false, false).pipe(
+    return this.listDayLogs(month, 'month', true, false, false).pipe(
       map((workingDayLogs : DayLog[]) => {
         let offset = 0;
         let weekLogs: WeekLog[] = [];
