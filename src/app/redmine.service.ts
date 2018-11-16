@@ -202,12 +202,19 @@ export class RedmineService {
             weekNumber: weekNumber,
             startsWith: mmt.isoWeekday(),
             numberOfWorkingDays: 0,
-            dayLogs: []
+            numberOfDays: 0,
+            dayLogs: [],
+            hoursLogged: 0
           };
           // debugger;
           do {
-            weekLog.dayLogs.push(workingDayLogs[offset]);
-            weekLog.numberOfWorkingDays++;
+            const dayLog = workingDayLogs[offset];
+            weekLog.dayLogs.push(dayLog);
+            if(dayLog.dayOfWeek < 6) {
+              weekLog.numberOfWorkingDays++;
+            }
+            weekLog.numberOfDays++;
+            weekLog.hoursLogged += workingDayLogs[offset].hoursLogged;
             offset++;
           } while(offset < workingDayLogs.length && workingDayLogs[offset].dayOfWeek > 1);
           weekLogs.push(weekLog);

@@ -44,8 +44,9 @@ export class WeekLog {
   weekNumber: number; // ISO number of week in year, i.e. from 1
   startsWith: number; // day of week that starts the week 1 for Monday, 2 for Tusday, etc.
   numberOfWorkingDays: number;
+  numberOfDays: number;
   dayLogs: DayLog[];
-  // hoursLogged: number;
+  hoursLogged: number;
 }
 
 export class Week {

@@ -54,7 +54,7 @@ export class CalendarComponent implements OnInit {
   skippedWorkingDays(weekLog: WeekLog): number[] {
     let result = [];
     if(weekLog.startsWith != 1) {
-      for(let i = weekLog.numberOfWorkingDays; i < 7 ; i++) {
+      for(let i = weekLog.numberOfDays; i < 7 ; i++) {
         result.push(i);
       }
     }
@@ -64,7 +64,7 @@ export class CalendarComponent implements OnInit {
   missingWorkingDays(weekLog: WeekLog): number[] {
     let result = [];
     if(weekLog.startsWith == 1) {
-      for(let i = weekLog.numberOfWorkingDays; i < 7 ; i++) {
+      for(let i = weekLog.numberOfDays; i < 7 ; i++) {
         result.push(i);
       }
     }

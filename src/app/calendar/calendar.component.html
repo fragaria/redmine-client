@@ -9,52 +9,67 @@
       </select>
     </div>
   </div>
+</div>
   <div class="container-fluid">
-    <div class="card-deck mb-3">
-      <div class="card text-white bg-secondary">
+    <div class="card-deck mb-2 text-dark small">
+      <div class="card week-no-card border-0 mr-0">
+      </div>
+
+      <div class="card border-0 bg-header mr-2 ml-2">
         <div class="card-body">
-          <h5 class="card-title">Monday</h5>
+          <h6 class="card-text">Monday</h6>
         </div>
       </div>
-      <div class="card text-white bg-secondary">
+      <div class="card border-0 bg-header mr-2 ml-2">
         <div class="card-body">
-          <h5 class="card-title">Tuesday</h5>
+          <h6 class="card-text">Tuesday</h6>
         </div>
       </div>
-      <div class="card text-white bg-secondary">
+      <div class="card border-0 bg-header mr-2 ml-2">
         <div class="card-body">
-          <h5 class="card-title">Wednesday</h5>
+          <h6 class="card-text">Wednesday</h6>
         </div>
       </div>
-      <div class="card text-white bg-secondary">
+      <div class="card border-0 bg-header mr-2 ml-2">
         <div class="card-body">
-          <h5 class="card-title">Thursday</h5>
+          <h6 class="card-text">Thursday</h6>
         </div>
       </div>
-      <div class="card text-white bg-secondary">
+      <div class="card border-0 bg-header mr-2 ml-2">
         <div class="card-body">
-          <h5 class="card-title">Friday</h5>
+          <h6 class="card-text">Friday</h6>
         </div>
       </div>
-      <div class="card text-white bg-secondary">
+      <div class="card border-0 bg-header mr-2 ml-2">
         <div class="card-body">
-          <h5 class="card-title">Saturday</h5>
+          <h6 class="card-text">Saturday</h6>
         </div>
       </div>
-      <div class="card text-white bg-secondary">
+      <div class="card border-0 bg-header mr-2 ml-2">
         <div class="card-body">
-          <h5 class="card-title">Sunday</h5>
+          <h6 class="card-text">Sunday</h6>
         </div>
+      </div>
+
+      <div class="card week-sum-card border-0 ml-0">
       </div>
     </div>
 
     <div *ngFor="let weekLog of weekLogs" class="card-deck mb-3">
 
-      <div *ngFor="let skipped of skippedWorkingDays(weekLog)" class="card">
+      <div class="card week-no-card border-0 bg-header text-dark small mr-0">
+        <div class="card-body week-no-body">
+          <div class="card-text">
+            {{weekLog.weekNumber}}.
+          </div>
+        </div>
+      </div>
+
+      <div *ngFor="let skipped of skippedWorkingDays(weekLog)" class="card bg-transparent border-light mr-2 ml-2">
       </div>
 
       <ng-container *ngFor="let dayLog of weekLog.dayLogs">
-        <div class="card h-100" [ngClass]="{
+        <div class="card h-100 mr-2 ml-2" [ngClass]="{
           'border-primary': ((dayLog.dayOfWeek < 6 && dayLog.hoursLogged > dailyWorkingHours) || dayLog.dayOfWeek > 5),
           'border-success': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged == dailyWorkingHours),
           'border-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours),
@@ -64,8 +79,20 @@
         </div>
       </ng-container>
 
-      <div *ngFor="let skipped of missingWorkingDays(weekLog)" class="card">
+      <div *ngFor="let skipped of missingWorkingDays(weekLog)" class="card bg-transparent border-light mr-2 ml-2">
+      </div>
+
+      <div class="card week-sum-card border-0 bg-header text-right ml-0">
+        <div class="card-body week-sum-body">
+          <h6 class="card-text" [ngClass]="{
+              'text-danger' : (weekLog.hoursLogged < (weekLog.numberOfWorkingDays * dailyWorkingHours)),
+              'text-primary': (weekLog.hoursLogged > (weekLog.numberOfWorkingDays * dailyWorkingHours)),
+              'text-success': (weekLog.hoursLogged == (weekLog.numberOfWorkingDays * dailyWorkingHours))
+            }">
+            {{weekLog.hoursLogged | number:'1.2-2'}}h
+          </h6>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<!--</div> -->
