@@ -1,4 +1,4 @@
-<div class="card-body">
+<div class="card-body" (click)="showModal()" style="cursor: pointer" >
   <h5 class="card-title" [ngClass]="{
     'text-primary': ((dayLog.dayOfWeek < 6 && dayLog.hoursLogged > dailyWorkingHours) || dayLog.dayOfWeek > 5),
     'text-success': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged == dailyWorkingHours),
@@ -16,4 +16,15 @@
   'bg-secondary': (dayLog.dayOfWeek > 5 && dayLog.hoursLogged == 0)
 }">
   Total: <span>{{dayLog.hoursLogged}}</span>
+</div>
+
+<div *ngIf="isModalShown" [config]="{ show: true }" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal"
+     class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-auto-name">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <app-gap [dayLog]="dayLog" [showLog]="true"></app-gap>
+      </div>
+    </div>
+  </div>
 </div>

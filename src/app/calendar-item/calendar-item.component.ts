@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { TimeEntryList, TimeEntry, DayLog } from '../models/time-entries';
 
@@ -23,6 +25,21 @@ export class CalendarItemComponent implements OnInit {
   newEntryTimeout = 10000;
 
   timeEntries = [];
+
+  @ViewChild('autoShownModal') autoShownModal: ModalDirective;
+  isModalShown: boolean = false;
+
+  showModal(): void {
+    this.isModalShown = true;
+  }
+
+  hideModal(): void {
+    this.autoShownModal.hide();
+  }
+
+  onHidden(): void {
+    this.isModalShown = false;
+  }
 
   constructor(
     private messageService: MessageService,

@@ -18,7 +18,7 @@ export class GapComponent implements OnInit {
 
   dailyWorkingHours: number;
 
-  showLog: boolean = false;
+  @Input() showLog: boolean = false;
   showNewLogForm: boolean = false;
 
   newEntryTimeout = 10000;
@@ -27,7 +27,7 @@ export class GapComponent implements OnInit {
     private redmine: RedmineService,
     private messageService: MessageService,
     private settings: SettingsService,
-    private utils: UtilService
+    public utils: UtilService
   ) { }
 
   ngOnInit() {

@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -49,7 +50,8 @@ import { IssueLabelComponent } from './issue-label/issue-label.component';
     AppRoutingModule,
     HttpClientModule,
     BsDatepickerModule.forRoot(),
-    TooltipModule.forRoot()
+    TooltipModule.forRoot(),
+    ModalModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
