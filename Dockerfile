@@ -1,4 +1,4 @@
-FROM node:11.1.0-alpine as build
+FROM node:10.13-alpine as build
 
 ENV APP_PATH /rcli
 
