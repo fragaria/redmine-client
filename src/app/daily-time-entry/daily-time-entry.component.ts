@@ -16,6 +16,7 @@ import { NewTimeEntry, TimeEntry } from '../models/time-entries';
 export class DailyTimeEntryComponent implements OnInit {
 
   @Input() day: string;
+  @Input() hoursToBeLogged: number;
   @Output() newEntryEmitter = new EventEmitter<TimeEntry>();
 
   public commentMaxLength = 255;
@@ -35,7 +36,7 @@ export class DailyTimeEntryComponent implements OnInit {
 
   initTimeEntryForm() {
     // debugger;
-    const defaultHours = this.settings.get().defaultHours;
+    const defaultHours = (this.hoursToBeLogged > 0) ? this.hoursToBeLogged : this.settings.get().defaultHours;
     const defaultIssueId = this.settings.get().defaultIssueId;
     this.timeEntryForm = this.formBuilder.group ({
       issueId: [(defaultIssueId !== undefined && defaultIssueId != null) ? defaultIssueId : null, Validators.required],
@@ -69,6 +70,7 @@ export class DailyTimeEntryComponent implements OnInit {
       comments: this.timeEntryForm.value.comment
     };
     this.redmine.createNewTimeEntry(newTimeEntry).subscribe(created => {
+      this.hoursToBeLogged -= created.hours;
       this.initTimeEntryForm()
       this.newEntryEmitter.emit(created);
     });

@@ -60,4 +60,8 @@ export class GapComponent implements OnInit {
     this.newEntryEmitter.emit(entry);
   }
 
+  computeHoursToBeLogged(): number {
+    return this.dailyWorkingHours - this.dayLog.hoursLogged
+  }
+
 }
