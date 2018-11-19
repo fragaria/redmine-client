@@ -9,7 +9,7 @@ import { catchError, map, tap, take, filter } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { SettingsService } from './settings.service';
 
-import { IssueList, Issue } from './models/issues';
+import { IssueList, IssueDetail, Issue } from './models/issues';
 import { UserResponse, User } from './models/users';
 import { TimeEntryList, NewTimeEntry, TimeEntry, DayLog, WeekLog } from './models/time-entries';
 import { TimeEntryActivityList, MessageType } from './models/enums';
@@ -95,8 +95,8 @@ export class RedmineService {
       return of(this.issuesMap.get(id));
     } else {
       const url = this.issuesPathBase + `/${id}.json`;
-      return this.http.get<Issue>(url, this.httpOptions).pipe(
-        map((response: {issue: Issue} ) => response.issue),
+      return this.http.get<IssueDetail>(url, this.httpOptions).pipe(
+        map((issueDetail:  IssueDetail) => issueDetail.issue),
         tap(issue => this.issuesMap.set(issue.id, issue)),
         catchError(this.handleError<Issue>("Obtaining issue by ID"))
       )
@@ -118,7 +118,7 @@ export class RedmineService {
     // debugger;
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
-        tap((issueList: IssueList) => console.log(`${issueList.total_count} time entries found.`)),
+        tap((timeEntryList: TimeEntryList) => console.log(`${timeEntryList.total_count} time entries found.`)),
         catchError(this.handleError<TimeEntryList>("Listing time entries", new TimeEntryList()))
       );
   }

@@ -8,6 +8,10 @@ export class IssueList {
   limit: number = 0;
 };
 
+export class IssueDetail {
+  issue: Issue;
+}
+
 export class Issue {
   id: number;
   project: Field;
