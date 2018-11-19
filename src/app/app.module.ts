@@ -24,6 +24,7 @@ import { DailyTimeEntryComponent } from './daily-time-entry/daily-time-entry.com
 import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarItemComponent } from './calendar-item/calendar-item.component';
 import { IssueLabelComponent } from './issue-label/issue-label.component';
+import { CalendarWeekComponent } from './calendar-week/calendar-week.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { IssueLabelComponent } from './issue-label/issue-label.component';
     DailyTimeEntryComponent,
     CalendarComponent,
     CalendarItemComponent,
-    IssueLabelComponent
+    IssueLabelComponent,
+    CalendarWeekComponent
   ],
   imports: [
     BrowserModule,

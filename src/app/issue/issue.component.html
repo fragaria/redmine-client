@@ -16,7 +16,7 @@
   </a>
 </div>
 <div class="row">
-  <app-time-entry class="col-xl" *ngIf="showNewLogForm" [issueId]="issue.id" (newEntry)="timeLogged($event)"></app-time-entry>
+  <app-time-entry class="col-xl" *ngIf="showNewLogForm" [issueId]="issue.id" (newEntryEmitter)="timeLogged($event)"></app-time-entry>
 </div>
 <div class="row">
   <app-time-entries class="col-xl" *ngIf="showLog" [entries]="log" [showIssue]="false" [showDate]="true" ></app-time-entries>

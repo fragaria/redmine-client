@@ -19,7 +19,7 @@ import { NewTimeEntry, TimeEntry } from '../models/time-entries';
 export class TimeEntryComponent implements OnInit {
 
   @Input() issueId: number;
-  @Output() newEntry = new EventEmitter<TimeEntry>();
+  @Output() newEntryEmitter = new EventEmitter<TimeEntry>();
 
   public commentMaxLength = 255;
   public timeEntryForm: FormGroup;
@@ -80,7 +80,7 @@ export class TimeEntryComponent implements OnInit {
           comments: this.timeEntryForm.value.comment
         };
         createActions.push(this.redmine.createNewTimeEntry(newTimeEntry).pipe(
-          tap(created => { this.newEntry.emit(created); })));
+          tap(created => { this.newEntryEmitter.emit(created); })));
       }
       combineLatest(createActions).subscribe(() => {
         this.saving = false;
@@ -98,7 +98,7 @@ export class TimeEntryComponent implements OnInit {
       };
       this.redmine.createNewTimeEntry(newTimeEntry).subscribe(created => {
         this.initTimeEntryForm();
-        this.newEntry.emit(created);
+        this.newEntryEmitter.emit(created);
       });
     }
   }

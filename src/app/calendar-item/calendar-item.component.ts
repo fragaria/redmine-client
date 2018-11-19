@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
@@ -16,6 +16,8 @@ import { UtilService } from '../util.service';
 export class CalendarItemComponent implements OnInit {
 
   @Input() dayLog: DayLog;
+
+  @Output() newEntryEmitter = new EventEmitter<TimeEntry>();
 
   dailyWorkingHours: number;
 
@@ -63,19 +65,8 @@ export class CalendarItemComponent implements OnInit {
   }
 
   timeLogged(entry: TimeEntry) {
-    // debugger;
-    if(!this.showLog) {
-      this.messageService.add(`${entry.hours}h spent on ${entry.spent_on} was logged.`);
-    }
-    entry.isNew = true;
-    setTimeout(function() {
-      entry.isNew = false;
-    }, this.newEntryTimeout);
-    this.dayLog.timeEntries.time_entries.splice(0, 0, entry);
-    this.dayLog.hoursLogged += entry.hours;
-    if(this.dayLog.hoursLogged == this.settings.get().dailyWorkingHours) {
-      this.messageService.add(`${this.utils.formatDayOfWeek(this.dayLog.dayOfWeek)} ${this.dayLog.date} is fully logged.`);
-    }
+    // nothing to update in DayLog, resend;
+    this.newEntryEmitter.emit(entry);
   }
 
 }

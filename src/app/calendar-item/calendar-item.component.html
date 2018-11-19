@@ -23,7 +23,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <app-gap [dayLog]="dayLog" [showLog]="true"></app-gap>
+        <app-gap [dayLog]="dayLog" [showLog]="true" (newEntryEmitter)="timeLogged($event)"></app-gap>
       </div>
     </div>
   </div>

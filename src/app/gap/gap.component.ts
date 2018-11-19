@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { TimeEntryList, TimeEntry, DayLog } from '../models/time-entries';
 
@@ -15,10 +15,11 @@ import { UtilService } from '../util.service';
 export class GapComponent implements OnInit {
 
   @Input() dayLog: DayLog;
+  @Input() showLog: boolean = false;
+
+  @Output() newEntryEmitter = new EventEmitter<TimeEntry>();
 
   dailyWorkingHours: number;
-
-  @Input() showLog: boolean = false;
   showNewLogForm: boolean = false;
 
   newEntryTimeout = 10000;
@@ -56,6 +57,7 @@ export class GapComponent implements OnInit {
     if(this.dayLog.hoursLogged == this.settings.get().dailyWorkingHours) {
       this.messageService.add(`${this.utils.formatDayOfWeek(this.dayLog.dayOfWeek)} ${this.dayLog.date} is fully logged.`);
     }
+    this.newEntryEmitter.emit(entry);
   }
 
 }

@@ -16,7 +16,7 @@ import { NewTimeEntry, TimeEntry } from '../models/time-entries';
 export class DailyTimeEntryComponent implements OnInit {
 
   @Input() day: string;
-  @Output() newEntry = new EventEmitter<TimeEntry>();
+  @Output() newEntryEmitter = new EventEmitter<TimeEntry>();
 
   public commentMaxLength = 255;
   public timeEntryForm: FormGroup;
@@ -70,7 +70,7 @@ export class DailyTimeEntryComponent implements OnInit {
     };
     this.redmine.createNewTimeEntry(newTimeEntry).subscribe(created => {
       this.initTimeEntryForm()
-      this.newEntry.emit(created);
+      this.newEntryEmitter.emit(created);
     });
   }
 
