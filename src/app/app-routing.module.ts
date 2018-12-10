@@ -17,8 +17,8 @@ const routes: Routes = [
   { path: 'month', component: CalendarComponent},
   { path: 'gaps', component: GapsComponent},
   { path: 'settings', component: SettingsComponent},
-  { path: 'home', redirectTo: '/month'},
-  { path: '', redirectTo: '/home', pathMatch: 'full'}
+  { path: 'home', redirectTo: '/week'},
+  { path: '', redirectTo: '/week', pathMatch: 'full'}
 ];
 
 @NgModule({

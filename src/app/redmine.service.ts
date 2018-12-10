@@ -45,6 +45,8 @@ export class RedmineService {
     private messageService: MessageService,
     private settings: SettingsService
   ) {
+    // debugger;
+    // console.log(moment.locale('en'));
     moment.updateLocale('en', {
       week : {
         dow : 1, // Monday is the first day of the week.
