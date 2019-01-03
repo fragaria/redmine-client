@@ -36,14 +36,18 @@ export class WeekLogComponent implements OnInit {
 
   private initWeeks() {
     let weekNumber = moment().week();
-    // debugger;
+    let year = moment().year();
     for(let i = 0; i < 8; i++, weekNumber--) {
-      const min = moment().week(weekNumber).startOf("week").format("YYYY-MM-DD");
-      const max = moment().week(weekNumber).endOf("week").subtract(2, 'days').format("YYYY-MM-DD");
+      if(weekNumber < 1) {
+        weekNumber = 52;
+        year--;
+      }
+      const min = moment().week(weekNumber).year(year).startOf("week").format("YYYY-MM-DD");
+      const max = moment().week(weekNumber).year(year).endOf("week").subtract(2, 'days').format("YYYY-MM-DD");
       this.weeks.push({
-       weekNumber: weekNumber,
+       html5fmt: `${year}-W${weekNumber}`,
        period: `${weekNumber}. week: ${min} - ${max}`
-     });
+      });
     }
   }
 
@@ -54,8 +58,8 @@ export class WeekLogComponent implements OnInit {
     });
   }
 
-  setWeek(week: number) {
-    this.weekDate.week(week);
+  setWeek(week: string) {
+    this.weekDate = moment(week, moment.HTML5_FMT.WEEK);
     this.listWorkingDayLogsForWeek();
   }
 

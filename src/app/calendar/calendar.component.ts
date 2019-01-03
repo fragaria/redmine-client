@@ -15,12 +15,14 @@ export class CalendarComponent implements OnInit {
 
   monthDate = moment();
   weekLogs: WeekLog[] = [];
+  months = [];
 
   constructor(
     private redmine: RedmineService
   ) { }
 
   ngOnInit() {
+    this.months = this.getMonths();
     this.listWorkingWeekLogs();
   }
 
@@ -32,15 +34,25 @@ export class CalendarComponent implements OnInit {
   }
 
   setMonth(month: string) {
-    this.monthDate.month(month);
+    this.monthDate = moment(month, moment.HTML5_FMT.MONTH);
     this.listWorkingWeekLogs();
   }
 
 
-  months(): string[] {
+  getMonths(): string[] {
     let months = [];
-    for(let i = 0; i < 6; i++) {
-      months.push(moment().subtract(i, 'months').format('MMMM'));
+    let year = moment().year();
+    let month = moment().month();
+    for(let i = 0; i < 6; i++, month--) {
+      if(month < 1) {
+        month = 12;
+        year--;
+      }
+      let monthDate = moment().month(month).year(year);
+      months.push({
+        html5fmt: monthDate.format(moment.HTML5_FMT.MONTH),
+        period: monthDate.format('MMMM'),
+      });
     }
     return months;
   }

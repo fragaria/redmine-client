@@ -21,6 +21,8 @@ export class GapsComponent implements OnInit {
 
   dailyWorkingHours: number;
 
+  months = [];
+
   constructor(
     private messageService: MessageService,
     private redmine: RedmineService,
@@ -28,26 +30,36 @@ export class GapsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.months = this.getMonths();
     this.dailyWorkingHours = this.settings.get().dailyWorkingHours;
     this.listWorkingDayLogsForMonth();
   }
 
   listWorkingDayLogsForMonth() {
     this.redmine.listDayLogs(this.monthDate.format(moment.HTML5_FMT.MONTH), 'month', false).subscribe(dayLogs => {
-      // debugger;
       this.dayLogs = dayLogs;
     });
   }
 
   setMonth(month: string) {
-    this.monthDate.month(month);
+    this.monthDate = moment(month, moment.HTML5_FMT.MONTH);
     this.listWorkingDayLogsForMonth();
   }
 
-  months(): string[] {
+  getMonths(): string[] {
     let months = [];
-    for(let i = 0; i < 6; i++) {
-      months.push(moment().subtract(i, 'months').format('MMMM'));
+    let year = moment().year();
+    let month = moment().month();
+    for(let i = 0; i < 6; i++, month--) {
+      if(month < 1) {
+        month = 12;
+        year--;
+      }
+      let monthDate = moment().month(month).year(year);
+      months.push({
+        html5fmt: monthDate.format(moment.HTML5_FMT.MONTH),
+        period: monthDate.format('MMMM'),
+      });
     }
     return months;
   }

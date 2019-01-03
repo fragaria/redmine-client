@@ -136,10 +136,11 @@ export class RedmineService {
     // debugger;
 
     const period = momentUnit as moment.unitOfTime.StartOf;
-    const html5fmt = momentUnit == 'week' ? 'YYYY-[W]WW' : 'YYYY-MM';
+    const html5fmt = momentUnit == 'week' ? 'GGGG-[W]WW' : 'YYYY-MM'; // Using GGGG as ISO year format for week in order to fix https://github.com/moment/moment/pull/4700
 
-    let dateToProcess = desc ? moment(weekOrMonth, html5fmt).endOf(period) : moment(weekOrMonth, html5fmt).startOf(period);
+    let dateToProcess = desc ? moment(weekOrMonth, html5fmt).endOf(period) : moment(weekOrMonth, html5fmt);
     const now = moment();
+
     while(dateToProcess.format(html5fmt) == weekOrMonth) {
       if((includeFuture || dateToProcess.isBefore(now, 'day') || dateToProcess.isSame(now, 'day')) // skip if future
           && (!onlyWorkingDays || dateToProcess.isoWeekday() < 6))  // skip non working day if needed

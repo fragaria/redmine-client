@@ -5,7 +5,7 @@
     </div>
     <div class="col-2 align-right">
       <select class="custom-select d-block w-100" (change)="setMonth($event.target.value)">
-        <option *ngFor="let month of months()">{{month}}</option>
+        <option *ngFor="let month of months" value="{{month.html5fmt}}">{{month.period}}</option>
       </select>
     </div>
   </div>

@@ -6,7 +6,7 @@
     </div>
     <div class="col-3 align-right">
       <select class="custom-select d-block w-100" (change)="setWeek($event.target.value)">
-        <option *ngFor="let week of weeks" value="{{week.weekNumber}}">{{week.period}}</option>
+        <option *ngFor="let week of weeks" value="{{week.html5fmt}}">{{week.period}}</option>
       </select>
     </div>
   </div>
