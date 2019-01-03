@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { Router } from '@angular/router';
+
 import { RedmineService } from './redmine.service';
 
 @Component({
@@ -9,10 +11,16 @@ import { RedmineService } from './redmine.service';
 })
 export class AppComponent {
   username: string;
+  selectedPage: string = '';
 
   constructor(
+    private router: Router,
     private redmine: RedmineService
   ) { }
+
+  isSelected(url: string) {
+    return url == this.router.url;
+  }
 
   setUsername(username: string) {
     this.username = username;
