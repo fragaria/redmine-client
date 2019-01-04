@@ -15,7 +15,7 @@ import { DayLog, Week } from '../models/time-entries';
 })
 export class WeekLogComponent implements OnInit {
 
-  weekDate = moment();
+  weekHtml5fmt: string = `${moment().year()}-W${moment().isoWeek() < 10 ? '0' : ''}${moment().isoWeek()}`; // formatting moment using HTML5_FMT has issues; use only when setting a date
   weeks = [];
 
   dayLogs: DayLog[];
@@ -45,21 +45,22 @@ export class WeekLogComponent implements OnInit {
       const min = moment().week(weekNumber).year(year).startOf("week").format("YYYY-MM-DD");
       const max = moment().week(weekNumber).year(year).endOf("week").subtract(2, 'days').format("YYYY-MM-DD");
       this.weeks.push({
-       html5fmt: `${year}-W${weekNumber}`,
+       html5fmt: `${year}-W${weekNumber < 10 ? '0' : ''}${weekNumber}`,
        period: `${weekNumber}. week: ${min} - ${max}`
       });
     }
   }
 
   listWorkingDayLogsForWeek() {
-    this.redmine.listDayLogs(this.weekDate.format(moment.HTML5_FMT.WEEK), 'week', true, true, false).subscribe(dayLogs => {
+    this.redmine.listDayLogs(this.weekHtml5fmt, 'week', true, true, false).subscribe(dayLogs => {
       // debugger;
       this.dayLogs = dayLogs;
     });
   }
 
   setWeek(week: string) {
-    this.weekDate = moment(week, moment.HTML5_FMT.WEEK);
+    // debugger;
+    this.weekHtml5fmt = week;
     this.listWorkingDayLogsForWeek();
   }
 

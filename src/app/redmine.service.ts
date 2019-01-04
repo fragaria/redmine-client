@@ -138,10 +138,16 @@ export class RedmineService {
     const period = momentUnit as moment.unitOfTime.StartOf;
     const html5fmt = momentUnit == 'week' ? 'GGGG-[W]WW' : 'YYYY-MM'; // Using GGGG as ISO year format for week in order to fix https://github.com/moment/moment/pull/4700
 
+    const min = moment(weekOrMonth, html5fmt).startOf(period);
+    const max = moment(weekOrMonth, html5fmt).endOf(period);
+
     let dateToProcess = desc ? moment(weekOrMonth, html5fmt).endOf(period) : moment(weekOrMonth, html5fmt);
     const now = moment();
 
-    while(dateToProcess.format(html5fmt) == weekOrMonth) {
+    while(
+      (desc && (dateToProcess.isAfter(min, 'day') || dateToProcess.isSame(min, 'day'))) ||
+      (!desc && (dateToProcess.isBefore(max, 'day') || dateToProcess.isSame(max, 'day')))
+    ) {
       if((includeFuture || dateToProcess.isBefore(now, 'day') || dateToProcess.isSame(now, 'day')) // skip if future
           && (!onlyWorkingDays || dateToProcess.isoWeekday() < 6))  // skip non working day if needed
       {
@@ -160,9 +166,7 @@ export class RedmineService {
       }
     }
 
-    const min = moment(weekOrMonth, html5fmt).startOf(period).format("YYYY-MM-DD");
-    const max = moment(weekOrMonth, html5fmt).endOf(period).format("YYYY-MM-DD");
-    const url = this.timeEntriesPath + `?user_id=${this.currentUser.id}&spent_on=><${min}|${max}&limit=99`;
+    const url = this.timeEntriesPath + `?user_id=${this.currentUser.id}&spent_on=><${min.format("YYYY-MM-DD")}|${max.format("YYYY-MM-DD")}&limit=99`;
 
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
@@ -195,6 +199,7 @@ export class RedmineService {
    */
   listWeekLogs(month: string): Observable<WeekLog[]> {
     let mmt = moment(month, moment.HTML5_FMT.MONTH).startOf('month');
+    let monthNumber = mmt.month();
     return this.listDayLogs(month, 'month', true, false, false).pipe(
       map((workingDayLogs : DayLog[]) => {
         let offset = 0;
@@ -222,7 +227,7 @@ export class RedmineService {
           } while(offset < workingDayLogs.length && workingDayLogs[offset].dayOfWeek > 1);
           weekLogs.push(weekLog);
           mmt.add(1, 'weeks').startOf('week');
-        } while (mmt.format(moment.HTML5_FMT.MONTH) == month);
+        } while (mmt.month() == monthNumber);
         return weekLogs;
       }),
       catchError(this.handleError<WeekLog[]>("Listing week logs in the month", []))

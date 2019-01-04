@@ -13,7 +13,7 @@ import { WeekLog } from '../models/time-entries';
 })
 export class CalendarComponent implements OnInit {
 
-  monthDate = moment();
+  monthHtml5fmt: string = `${moment().year()}-${moment().month() < 9 ? '0' : ''}${moment().month() + 1}`; // formatting moment using HTML5_FMT has issues; use only when setting a date; month() starts at 0
   weekLogs: WeekLog[] = [];
   months = [];
 
@@ -27,14 +27,14 @@ export class CalendarComponent implements OnInit {
   }
 
   listWorkingWeekLogs() {
-    this.redmine.listWeekLogs(this.monthDate.format(moment.HTML5_FMT.MONTH)).subscribe(weekLogs => {
+    this.redmine.listWeekLogs(this.monthHtml5fmt).subscribe(weekLogs => {
       // debugger;
       this.weekLogs = weekLogs;
     });
   }
 
   setMonth(month: string) {
-    this.monthDate = moment(month, moment.HTML5_FMT.MONTH);
+    this.monthHtml5fmt = month;
     this.listWorkingWeekLogs();
   }
 
@@ -43,15 +43,16 @@ export class CalendarComponent implements OnInit {
     let months = [];
     let year = moment().year();
     let month = moment().month();
+    month++; // month() starts at 0
     for(let i = 0; i < 6; i++, month--) {
       if(month < 1) {
         month = 12;
         year--;
       }
-      let monthDate = moment().month(month).year(year);
+      let html5fmt = `${year}-${month < 10 ? '0' : ''}${month}`;
       months.push({
-        html5fmt: monthDate.format(moment.HTML5_FMT.MONTH),
-        period: monthDate.format('MMMM'),
+        html5fmt: html5fmt,
+        period: moment(html5fmt, moment.HTML5_FMT.MONTH).format('MMMM')
       });
     }
     return months;

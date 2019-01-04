@@ -15,7 +15,7 @@ import { TimeEntryList, TimeEntry, DayLog } from '../models/time-entries';
 })
 export class GapsComponent implements OnInit {
 
-  monthDate = moment();
+  monthHtml5fmt: string = `${moment().year()}-${moment().month() < 9 ? '0' : ''}${moment().month() + 1}`; // formatting moment using HTML5_FMT has issues; use only when setting a date; month() starts at 0
 
   dayLogs: DayLog[];
 
@@ -36,13 +36,13 @@ export class GapsComponent implements OnInit {
   }
 
   listWorkingDayLogsForMonth() {
-    this.redmine.listDayLogs(this.monthDate.format(moment.HTML5_FMT.MONTH), 'month', false).subscribe(dayLogs => {
+    this.redmine.listDayLogs(this.monthHtml5fmt, 'month', false).subscribe(dayLogs => {
       this.dayLogs = dayLogs;
     });
   }
 
   setMonth(month: string) {
-    this.monthDate = moment(month, moment.HTML5_FMT.MONTH);
+    this.monthHtml5fmt = month;
     this.listWorkingDayLogsForMonth();
   }
 
@@ -50,15 +50,16 @@ export class GapsComponent implements OnInit {
     let months = [];
     let year = moment().year();
     let month = moment().month();
+    month++; // month() starts at 0
     for(let i = 0; i < 6; i++, month--) {
       if(month < 1) {
         month = 12;
         year--;
       }
-      let monthDate = moment().month(month).year(year);
+      let html5fmt = `${year}-${month < 10 ? '0' : ''}${month}`;
       months.push({
-        html5fmt: monthDate.format(moment.HTML5_FMT.MONTH),
-        period: monthDate.format('MMMM'),
+        html5fmt: html5fmt,
+        period: moment(html5fmt, moment.HTML5_FMT.MONTH).format('MMMM')
       });
     }
     return months;
