@@ -48,7 +48,7 @@ export class SettingsService {
   save(settings: Settings) {
     // debugger;
     this.settings = settings;
-    this.saveState;
+    this.saveState();
   }
 
   private saveState() {
