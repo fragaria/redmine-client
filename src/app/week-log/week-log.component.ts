@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { MessageService } from '../message.service';
 import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
 
@@ -25,7 +24,6 @@ export class WeekLogComponent implements OnInit {
   dailyWorkingHours: number;
 
   constructor(
-    private messageService: MessageService,
     private redmine: RedmineService,
     private settings: SettingsService
   ) { }

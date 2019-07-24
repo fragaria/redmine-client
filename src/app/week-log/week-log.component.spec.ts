@@ -45,7 +45,7 @@ class MockRedmineService extends RedmineService {
   }
 }
 
-fdescribe('WeekLogComponent', () => {
+describe('WeekLogComponent', () => {
   let component: WeekLogComponent;
   let fixture: ComponentFixture<WeekLogComponent>;
 
