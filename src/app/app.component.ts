@@ -11,7 +11,7 @@ import { RedmineService } from './redmine.service';
 })
 export class AppComponent {
   username: string;
-  selectedPage: string = '';
+  selectedPage = '';
 
   constructor(
     private router: Router,
@@ -19,7 +19,7 @@ export class AppComponent {
   ) { }
 
   isSelected(url: string) {
-    return url == this.router.url;
+    return url === this.router.url;
   }
 
   setUsername(username: string) {

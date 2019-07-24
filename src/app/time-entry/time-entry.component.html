@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <!-- <div *ngIf="timeEntryForm.status == 'INVALID'"> Form status: {{timeEntryForm.status}}</div> -->
+  <!-- <div *ngIf="timeEntryForm.status === 'INVALID'"> Form status: {{timeEntryForm.status}}</div> -->
   <form [formGroup]="timeEntryForm" (ngSubmit)="createNewTimeEntry()" >
     <div class="row">
       <label class="col" for="from">Spent on:</label>

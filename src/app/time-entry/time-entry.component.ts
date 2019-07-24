@@ -24,8 +24,8 @@ export class TimeEntryComponent implements OnInit {
   public commentMaxLength = 255;
   public timeEntryForm: FormGroup;
   public activities: Field[] = [];
-  public logPeriod: boolean = false;
-  public saving: boolean = false;
+  public logPeriod = false;
+  public saving = false;
 
   constructor(
     private redmine: RedmineService,
@@ -66,11 +66,11 @@ export class TimeEntryComponent implements OnInit {
       this.timeEntryForm.value.activityId;
     const activityName = this.redmine.getActivityById(activityId).name;
     this.saving = true;
-    if(this.logPeriod) {
+    if (this.logPeriod) {
       this.timeEntryForm.disable();
-      let to = moment(this.timeEntryForm.value.period[1]).format('YYYY-MM-DD');
-      let createActions = [];
-      for(let mmt = moment(this.timeEntryForm.value.period[0]); mmt.format('YYYY-MM-DD') <= to; mmt.add(1, 'days')) {
+      const to = moment(this.timeEntryForm.value.period[1]).format('YYYY-MM-DD');
+      const createActions = [];
+      for (const mmt = moment(this.timeEntryForm.value.period[0]); mmt.format('YYYY-MM-DD') <= to; mmt.add(1, 'days')) {
         const newTimeEntry = {
           issue_id: this.issueId,
           spent_on: mmt.format('YYYY-MM-DD'),

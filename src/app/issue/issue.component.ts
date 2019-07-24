@@ -15,9 +15,9 @@ export class IssueComponent implements OnInit {
   @Input() issue: Issue;
 
   lastLogEntry: string;
-  showLog: boolean = false;
+  showLog = false;
   log: TimeEntryList;
-  showNewLogForm: boolean = false;
+  showNewLogForm = false;
 
   newEntryTimeout = 10000;
 
@@ -27,12 +27,12 @@ export class IssueComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.redmine.getLastTime(this.issue.id).subscribe(lastTime => this.lastLogEntry = lastTime)
+    this.redmine.getLastTime(this.issue.id).subscribe(lastTime => this.lastLogEntry = lastTime);
   }
 
   toggleLog() {
     // debugger;
-    if(!this.showLog && !this.log) {
+    if (!this.showLog && !this.log) {
       this.loadLog();
     } else {
       this.showLog = !this.showLog;
@@ -57,16 +57,16 @@ export class IssueComponent implements OnInit {
     this.redmine.getLastTime(this.issue.id).subscribe(
       time => this.lastLogEntry = time
     );
-    if(!this.showLog) {
+    if (!this.showLog) {
       this.messageService.add(`Time spent on ${entry.spent_on} was logged to ${this.issue.subject}.`);
     }
-    if(this.showLog && (this.log === undefined || this.log == null)) {
+    if (this.showLog && (this.log === undefined || this.log === null)) {
       this.log = new TimeEntryList();
     }
-    if(this.log !== undefined && this.log != null) {
+    if (this.log !== undefined && this.log !== null) {
       // debugger;
       entry.isNew = true;
-      setTimeout(function() {
+      setTimeout(function () {
         entry.isNew = false;
       }, this.newEntryTimeout);
       this.log.time_entries.splice(0, 0, entry);

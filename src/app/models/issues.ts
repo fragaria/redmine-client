@@ -3,10 +3,10 @@ import { TimeEntryList } from './time-entries';
 
 export class IssueList {
   issues: Issue[] = [];
-  total_count: number = 0;
-  offset: number = 0;
-  limit: number = 0;
-};
+  total_count = 0;
+  offset = 0;
+  limit = 0;
+}
 
 export class IssueDetail {
   issue: Issue;
@@ -27,4 +27,4 @@ export class Issue {
   custom_fields: CustomField[];
   created_on: string;
   updated_on: string;
-};
+}

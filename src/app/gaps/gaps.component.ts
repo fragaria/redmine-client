@@ -14,8 +14,8 @@ import { TimeEntryList, TimeEntry, DayLog } from '../models/time-entries';
   styleUrls: ['./gaps.component.css']
 })
 export class GapsComponent implements OnInit {
-
-  monthHtml5fmt: string = `${moment().year()}-${moment().month() < 9 ? '0' : ''}${moment().month() + 1}`; // formatting moment using HTML5_FMT has issues; use only when setting a date; month() starts at 0
+  // formatting moment using HTML5_FMT has issues; use only when setting a date; month() starts at 0
+  monthHtml5fmt = `${moment().year()}-${moment().month() < 9 ? '0' : ''}${moment().month() + 1}`;
 
   dayLogs: DayLog[];
 
@@ -47,16 +47,16 @@ export class GapsComponent implements OnInit {
   }
 
   getMonths(): string[] {
-    let months = [];
+    const months = [];
     let year = moment().year();
     let month = moment().month();
     month++; // month() starts at 0
-    for(let i = 0; i < 6; i++, month--) {
-      if(month < 1) {
+    for (let i = 0; i < 6; i++ , month--) {
+      if (month < 1) {
         month = 12;
         year--;
       }
-      let html5fmt = `${year}-${month < 10 ? '0' : ''}${month}`;
+      const html5fmt = `${year}-${month < 10 ? '0' : ''}${month}`;
       months.push({
         html5fmt: html5fmt,
         period: moment(html5fmt, moment.HTML5_FMT.MONTH).format('MMMM')

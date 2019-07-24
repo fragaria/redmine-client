@@ -1,8 +1,9 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xl-10">
-      <h2>Check out days that were not fully logged yet <a (click)=listWorkingDayLogsForMonth()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a>
-    </h2>
+      <h2>Check out days that were not fully logged yet <a (click)=listWorkingDayLogsForMonth()><img alt="reload"
+            src="../assets/refresh-icon-png-4.jpg" class="reload" /></a>
+      </h2>
     </div>
     <div class="col-2 align-right">
       <select class="custom-select d-block w-100" (change)="setMonth($event.target.value)">
@@ -12,8 +13,8 @@
   </div>
   <div class="container-fluid">
     <ng-container *ngFor="let dayLog of dayLogs | keyvalue">
-      <div *ngIf="dayLog.value.hoursLogged != dailyWorkingHours" class="gap-container">
-        <app-gap [dayLog]="dayLog.value" ></app-gap>
+      <div *ngIf="dayLog.value.hoursLogged !== dailyWorkingHours" class="gap-container">
+        <app-gap [dayLog]="dayLog.value"></app-gap>
       </div>
     </ng-container>
   </div>

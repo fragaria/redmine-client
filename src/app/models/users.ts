@@ -1,6 +1,6 @@
 export class UserResponse {
-  user: User
-};
+  user: User;
+}
 
 export class User {
   id: number;
@@ -10,5 +10,5 @@ export class User {
   mail: string;
   created_on: string;
   last_login_on: string;
-  api_key: string
-};
+  api_key: string;
+}

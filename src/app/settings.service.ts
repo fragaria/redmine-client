@@ -27,9 +27,9 @@ export class SettingsService {
   }
 
   private getNumberFromLocalStorage(key: string, defaultValue: number): number {
-    let item = localStorage.getItem(key);
-    if(item !== undefined && item != null && item != '') {
-      let numeric = +item;
+    const item = localStorage.getItem(key);
+    if (item !== undefined && item !== null && item !== '') {
+      const numeric = +item;
       return numeric > 0 ? numeric : defaultValue;
     } else {
       return defaultValue;
@@ -37,8 +37,8 @@ export class SettingsService {
   }
 
   private getStringFromLocalStorage(key: string, defaultValue: string): string {
-    let item = localStorage.getItem(key);
-    return (item !== undefined && item != null && item != '') ? item : defaultValue;
+    const item = localStorage.getItem(key);
+    return (item !== undefined && item !== null && item !== '') ? item : defaultValue;
   }
 
   get(): Settings {

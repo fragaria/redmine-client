@@ -11,9 +11,9 @@ import { IssueList, Issue } from '../models/issues';
 export class IssueListComponent implements OnInit {
 
   issues: Issue[];
-  total_count: number = 0;
-  offset: number = 0;
-  limit: number = 0;
+  total_count = 0;
+  offset = 0;
+  limit = 0;
 
   constructor(
     private redmine: RedmineService

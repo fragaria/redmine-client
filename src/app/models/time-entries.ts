@@ -2,10 +2,10 @@ import { Field, CustomField } from './fields';
 
 export class TimeEntryList {
   time_entries: TimeEntry[] = [];
-  total_count: number = 0;
-  offset: number = 0;
-  limit: number = 0
-};
+  total_count = 0;
+  offset = 0;
+  limit = 0;
+}
 
 export class TimeEntry {
   id: number;
@@ -21,8 +21,8 @@ export class TimeEntry {
   created_on: string;
   updated_on: string;
   // display extension
-  isNew: boolean = false;
-};
+  isNew = false;
+}
 
 export class NewTimeEntry {
   issue_id: number;
@@ -31,7 +31,7 @@ export class NewTimeEntry {
   activity_id: number;
   activity_name: string;
   comments: string;
-};
+}
 
 export class DayLog {
   date: string;

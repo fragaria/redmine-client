@@ -46,7 +46,7 @@ export class SettingsComponent implements OnInit {
   reset() {
     // debugger;
     this.settings = this.settingsService.reset();
-    console.log('Settings reset to ' + JSON.stringify(this.settings))
+    console.log('Settings reset to ' + JSON.stringify(this.settings));
   }
 
 }

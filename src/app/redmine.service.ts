@@ -20,13 +20,13 @@ import { Field } from './models/fields';
 })
 export class RedmineService {
 
-  private currentUserPath = "/api/users/current.json";
-  private myIssuesPath = "/api/issues.json?assigned_to_id=me";
-  private issuesPathBase = "/api/issues";
-  private timeEntriesPath = "/api/time_entries.json";
-  private activitiesEnumPath = "/api/enumerations/time_entry_activities.json";
+  private currentUserPath = '/api/users/current.json';
+  private myIssuesPath = '/api/issues.json?assigned_to_id=me';
+  private issuesPathBase = '/api/issues';
+  private timeEntriesPath = '/api/time_entries.json';
+  private activitiesEnumPath = '/api/enumerations/time_entry_activities.json';
 
-  private apiKeyHeader = "X-Redmine-API-Key";
+  private apiKeyHeader = 'X-Redmine-API-Key';
 
   private currentUser: User = null;
   private activitiesEnum: Field[];
@@ -48,15 +48,15 @@ export class RedmineService {
     // debugger;
     // console.log(moment.locale('en'));
     moment.updateLocale('en', {
-      week : {
-        dow : 1, // Monday is the first day of the week.
-        doy : 3  // The week that contains Jan 4th is the first week of the year.
+      week: {
+        dow: 1, // Monday is the first day of the week.
+        doy: 3  // The week that contains Jan 4th is the first week of the year.
       }
     });
   }
 
   authenticate(username: string, password: string): Observable<User> {
-    let httpOptions = this.httpOptions;
+    const httpOptions = this.httpOptions;
     httpOptions.headers = httpOptions.headers.set('Authorization', 'Basic ' + btoa(`${username}:${password}`));
     return this.http
       .get<UserResponse>(this.currentUserPath, httpOptions).pipe(
@@ -65,15 +65,15 @@ export class RedmineService {
           this.currentUser = user;
           this.httpOptions.headers.append(this.apiKeyHeader, this.currentUser.api_key);
         }),
-        catchError(this.handleError<User>("Authentication"))
+        catchError(this.handleError<User>('Authentication'))
       );
   }
 
   /**
    * https://www.redmine.org/projects/redmine/wiki/Rest_Issues
    */
-  listMyIssues(noCache:boolean = false): Observable<IssueList> {
-    if(noCache || this.myIssues.issues.length == 0) {
+  listMyIssues(noCache: boolean = false): Observable<IssueList> {
+    if (noCache || this.myIssues.issues.length === 0) {
       // debugger;
       return this.http
         .get<IssueList>(this.myIssuesPath, this.httpOptions).pipe(
@@ -81,27 +81,27 @@ export class RedmineService {
             console.log(`${issueList.total_count} issues found.`);
             // debugger;
             this.myIssues = issueList;
-            for(let issue of issueList.issues) {
+            for (const issue of issueList.issues) {
               this.issuesMap.set(issue.id, issue);
             }
           }),
-          catchError(this.handleError<IssueList>("Listing your issues", new IssueList()))
+          catchError(this.handleError<IssueList>('Listing your issues', new IssueList()))
         );
-      } else {
-        return of(this.myIssues);
-      }
+    } else {
+      return of(this.myIssues);
+    }
   }
 
   getIssueById(id: number): Observable<Issue> {
-    if(this.issuesMap.has(id)) {
+    if (this.issuesMap.has(id)) {
       return of(this.issuesMap.get(id));
     } else {
       const url = this.issuesPathBase + `/${id}.json`;
       return this.http.get<IssueDetail>(url, this.httpOptions).pipe(
-        map((issueDetail:  IssueDetail) => issueDetail.issue),
+        map((issueDetail: IssueDetail) => issueDetail.issue),
         tap(issue => this.issuesMap.set(issue.id, issue)),
-        catchError(this.handleError<Issue>("Obtaining issue by ID"))
-      )
+        catchError(this.handleError<Issue>('Obtaining issue by ID'))
+      );
     }
   }
 
@@ -110,8 +110,8 @@ export class RedmineService {
     // debugger;
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
-        map((timeEntryList: TimeEntryList) => (timeEntryList.time_entries.length > 0) ? timeEntryList.time_entries[0].spent_on : ""),
-        catchError(this.handleError<string>("Last log time computation", "", [404]))
+        map((timeEntryList: TimeEntryList) => (timeEntryList.time_entries.length > 0) ? timeEntryList.time_entries[0].spent_on : ''),
+        catchError(this.handleError<string>('Last log time computation', '', [404]))
       );
   }
 
@@ -121,7 +121,7 @@ export class RedmineService {
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
         tap((timeEntryList: TimeEntryList) => console.log(`${timeEntryList.total_count} time entries found.`)),
-        catchError(this.handleError<TimeEntryList>("Listing time entries", new TimeEntryList()))
+        catchError(this.handleError<TimeEntryList>('Listing time entries', new TimeEntryList()))
       );
   }
 
@@ -131,27 +131,33 @@ export class RedmineService {
    * or moment.HTML5_FMT.MONTH (YYYY-MM) string, e.g. 2018-04
    * @param momentUnit - 'week' or 'month' supported
    */
-  listDayLogs(weekOrMonth: string, momentUnit: string, includeFuture: boolean = true, onlyWorkingDays: boolean = true, desc: boolean = true): Observable<DayLog[]> {
-    let logMap = [];
+  listDayLogs(
+    weekOrMonth: string,
+    momentUnit: string,
+    includeFuture: boolean = true,
+    onlyWorkingDays: boolean = true,
+    desc: boolean = true
+  ): Observable<DayLog[]> {
+    const logMap = [];
     // debugger;
 
     const period = momentUnit as moment.unitOfTime.StartOf;
-    const html5fmt = momentUnit == 'week' ? 'GGGG-[W]WW' : 'YYYY-MM'; // Using GGGG as ISO year format for week in order to fix https://github.com/moment/moment/pull/4700
+    // Using GGGG as ISO year format for week in order to fix https://github.com/moment/moment/pull/4700
+    const html5fmt = momentUnit === 'week' ? 'GGGG-[W]WW' : 'YYYY-MM';
 
     const min = moment(weekOrMonth, html5fmt).startOf(period);
     const max = moment(weekOrMonth, html5fmt).endOf(period);
 
-    let dateToProcess = desc ? moment(weekOrMonth, html5fmt).endOf(period) : moment(weekOrMonth, html5fmt);
+    const dateToProcess = desc ? moment(weekOrMonth, html5fmt).endOf(period) : moment(weekOrMonth, html5fmt);
     const now = moment();
 
-    while(
+    while (
       (desc && (dateToProcess.isAfter(min, 'day') || dateToProcess.isSame(min, 'day'))) ||
       (!desc && (dateToProcess.isBefore(max, 'day') || dateToProcess.isSame(max, 'day')))
     ) {
-      if((includeFuture || dateToProcess.isBefore(now, 'day') || dateToProcess.isSame(now, 'day')) // skip if future
-          && (!onlyWorkingDays || dateToProcess.isoWeekday() < 6))  // skip non working day if needed
-      {
-        let dateToProcessString = dateToProcess.format("YYYY-MM-DD");
+      if ((includeFuture || dateToProcess.isBefore(now, 'day') || dateToProcess.isSame(now, 'day')) // skip if future
+        && (!onlyWorkingDays || dateToProcess.isoWeekday() < 6)) {
+        const dateToProcessString = dateToProcess.format('YYYY-MM-DD');
         logMap[dateToProcessString] = {
           date: dateToProcessString,
           dayOfWeek: dateToProcess.isoWeekday(),
@@ -159,22 +165,25 @@ export class RedmineService {
           hoursLogged: 0
         };
       }
-      if(desc) {
+      if (desc) {
         dateToProcess.subtract(1, 'days');
       } else {
         dateToProcess.add(1, 'days');
       }
     }
 
-    const url = this.timeEntriesPath + `?user_id=${this.currentUser.id}&spent_on=><${min.format("YYYY-MM-DD")}|${max.format("YYYY-MM-DD")}&limit=99`;
+    const url = this.timeEntriesPath
+      + `?user_id=${this.currentUser.id}&spent_on=><${min.format('YYYY-MM-DD')}|${max.format('YYYY-MM-DD')}&limit=99`;
 
     return this.http
       .get<TimeEntryList>(url, this.httpOptions).pipe(
-        tap((entryList: TimeEntryList) => console.log(`Process ${entryList.time_entries.length} of ${entryList.total_count} time entries found for the ${period}.`)),
+        tap((entryList: TimeEntryList) =>
+          console.log(`Process ${entryList.time_entries.length} of ${entryList.total_count} time entries found for the ${period}.`)
+        ),
         map((entryList: TimeEntryList) => {
           // debugger;
-          for(let entry of entryList.time_entries) {
-            if(logMap[entry.spent_on] !== undefined) {
+          for (const entry of entryList.time_entries) {
+            if (logMap[entry.spent_on] !== undefined) {
               logMap[entry.spent_on].timeEntries.time_entries.push(entry);
               logMap[entry.spent_on].hoursLogged += entry.hours;
             }
@@ -182,14 +191,10 @@ export class RedmineService {
           // TODO repeat if needed
           return logMap;
         }),
-        map((logMap: DayLog[]) => { // map from associative array to numberred
-          let result = [];
-          for(let key in logMap) {
-            result.push(logMap[key]);
-          }
-          return result;
+        map((logMapData: DayLog[]) => { // map from associative array to numberred
+          return Object.keys(logMapData).map((key) => logMapData[key]);
         }),
-        // TODO filter(dayLog => dayLog.hoursLogged != this.settings.get().dailyWorkingHours),
+        // TODO filter(dayLog => dayLog.hoursLogged !== this.settings.get().dailyWorkingHours),
         catchError(this.handleError<DayLog[]>('Listing daily logs', []))
       );
   }
@@ -198,15 +203,15 @@ export class RedmineService {
    * @param month - moment.HTML5_FMT.MONTH (YYYY-MM) string, e.g. 2018-04
    */
   listWeekLogs(month: string): Observable<WeekLog[]> {
-    let mmt = moment(month, moment.HTML5_FMT.MONTH).startOf('month');
-    let monthNumber = mmt.month();
+    const mmt = moment(month, moment.HTML5_FMT.MONTH).startOf('month');
+    const monthNumber = mmt.month();
     return this.listDayLogs(month, 'month', true, false, false).pipe(
-      map((workingDayLogs : DayLog[]) => {
+      map((workingDayLogs: DayLog[]) => {
         let offset = 0;
-        let weekLogs: WeekLog[] = [];
+        const weekLogs: WeekLog[] = [];
         do {
           const weekNumber = mmt.isoWeek();
-          let weekLog = {
+          const weekLog = {
             weekNumber: weekNumber,
             startsWith: mmt.isoWeekday(),
             numberOfWorkingDays: 0,
@@ -218,25 +223,25 @@ export class RedmineService {
           do {
             const dayLog = workingDayLogs[offset];
             weekLog.dayLogs.push(dayLog);
-            if(dayLog.dayOfWeek < 6) {
+            if (dayLog.dayOfWeek < 6) {
               weekLog.numberOfWorkingDays++;
             }
             weekLog.numberOfDays++;
             weekLog.hoursLogged += workingDayLogs[offset].hoursLogged;
             offset++;
-          } while(offset < workingDayLogs.length && workingDayLogs[offset].dayOfWeek > 1);
+          } while (offset < workingDayLogs.length && workingDayLogs[offset].dayOfWeek > 1);
           weekLogs.push(weekLog);
           mmt.add(1, 'weeks').startOf('week');
-        } while (mmt.month() == monthNumber);
+        } while (mmt.month() === monthNumber);
         return weekLogs;
       }),
-      catchError(this.handleError<WeekLog[]>("Listing week logs in the month", []))
+      catchError(this.handleError<WeekLog[]>('Listing week logs in the month', []))
     );
   }
 
   getActivitiesEnum(): Observable<Field[]> {
     // debugger;
-    if(this.activitiesEnum === undefined || this.activitiesEnum == null || this.activitiesEnum.length == 0) {
+    if (this.activitiesEnum === undefined || this.activitiesEnum === null || this.activitiesEnum.length === 0) {
       return this.http
         .get<TimeEntryActivityList>(this.activitiesEnumPath, this.httpOptions).pipe(
           map((activityList: TimeEntryActivityList) => activityList.time_entry_activities),
@@ -244,11 +249,11 @@ export class RedmineService {
             this.activitiesEnum = activities;
             this.activitiesMap = new Map();
             // debugger;
-            for(let activity of activities) {
+            for (const activity of activities) {
               this.activitiesMap.set(activity.id, activity);
             }
           }),
-          catchError(this.handleError<Field[]>("Obtaining activities enum", []))
+          catchError(this.handleError<Field[]>('Obtaining activities enum', []))
         );
     } else {
       // debugger;
@@ -261,23 +266,23 @@ export class RedmineService {
   }
 
   getDefaultActivity(): Observable<Field> {
-    let defaultActivityName = this.settings.get().defaultActivityName;
+    const defaultActivityName = this.settings.get().defaultActivityName;
     // debugger;
-    if(this.defaultActivity === undefined || this.defaultActivity == null || defaultActivityName != this.defaultActivity.name) {
+    if (this.defaultActivity === undefined || this.defaultActivity === null || defaultActivityName !== this.defaultActivity.name) {
       return this.getActivitiesEnum().pipe(
         map((activities: Field[]) => {
           // debugger;
-          let result = null;
+          const result = null;
 
-          for(let activity of activities) {
-            if(activity.name == defaultActivityName) {
+          for (const activity of activities) {
+            if (activity.name === defaultActivityName) {
               return activity;
             }
           }
           return activities[0];
         }),
         tap(activity => this.defaultActivity = activity),
-        catchError(this.handleError<Field>("Obtaining default activity"))
+        catchError(this.handleError<Field>('Obtaining default activity'))
       );
     } else {
       return of(this.defaultActivity);
@@ -286,9 +291,9 @@ export class RedmineService {
 
   createNewTimeEntry(timeEntry: NewTimeEntry): Observable<TimeEntry> {
     return this.http
-      .post(this.timeEntriesPath, {"time_entry": timeEntry}, this.httpOptions).pipe(
-        map((timeEntryContainer: {"time_entry": TimeEntry}) => timeEntryContainer.time_entry),
-        catchError(this.handleError<TimeEntry>("New time entry creation"))
+      .post(this.timeEntriesPath, { 'time_entry': timeEntry }, this.httpOptions).pipe(
+        map((timeEntryContainer: { 'time_entry': TimeEntry }) => timeEntryContainer.time_entry),
+        catchError(this.handleError<TimeEntry>('New time entry creation'))
       );
   }
 
@@ -303,9 +308,9 @@ export class RedmineService {
    * @param result - optional value to return as the observable result
    * @param ignoreStatuses - list of statuses to be ignored
    */
-  private handleError<T> (operation = 'Operation', result?: T, ignoreStatuses?: number[]) {
+  private handleError<T>(operation = 'Operation', result?: T, ignoreStatuses?: number[]) {
     return (error: any): Observable<T> => {
-      if(ignoreStatuses === undefined || !ignoreStatuses.includes(error.status)) {
+      if (ignoreStatuses === undefined || !ignoreStatuses.includes(error.status)) {
         this.messageService.add(`${operation} failed because of: ${this.extractErrorMessage(error)}`, MessageType.ERROR);
         console.log(`${operation} failed because of:\n${JSON.stringify(error)}`);
       }
@@ -316,9 +321,9 @@ export class RedmineService {
   }
 
   private extractErrorMessage(error: any): string {
-    if(error !== undefined && error != null && error.hasOwnProperty("message")) {
+    if (error !== undefined && error !== null && error.hasOwnProperty('message')) {
       return error.message;
-    } else if(error.hasOwnProperty("error")) {
+    } else if (error.hasOwnProperty('error')) {
       return error.error;
     } else {
       return JSON.stringify(error);
