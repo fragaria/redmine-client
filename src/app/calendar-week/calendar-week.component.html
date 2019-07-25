@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <div *ngFor="let skipped of skippedWorkingDays(weekLog)" class="card bg-transparent border-light mr-2 ml-2">
+  <div *ngFor="let skipped of skippedWorkingDays(weekLog)" class="missing card bg-transparent border-light mr-2 ml-2">
   </div>
 
   <ng-container *ngFor="let dayLog of weekLog.dayLogs">
@@ -21,7 +21,7 @@
     </div>
   </ng-container>
 
-  <div *ngFor="let skipped of missingWorkingDays(weekLog)" class="card bg-transparent border-light mr-2 ml-2">
+  <div *ngFor="let skipped of missingWorkingDays(weekLog)" class="missing card bg-transparent border-light mr-2 ml-2">
   </div>
 
   <div class="card week-sum-card border-0 bg-header text-right ml-0">
