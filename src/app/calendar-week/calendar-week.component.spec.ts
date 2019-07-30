@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import cloneDeep from 'lodash.clonedeep';
 
 import { CalendarItemComponent } from '../calendar-item/calendar-item.component';
 import { IssueLabelComponent } from '../issue-label/issue-label.component';
@@ -12,14 +13,13 @@ import { TimeEntriesComponent } from '../time-entries/time-entries.component';
 import { weekLog1 } from '../models/time-entries.mock';
 import { CalendarWeekComponent } from './calendar-week.component';
 
-
 describe('CalendarWeekComponent', () => {
   @Component({
     selector: `app-host-component`,
     template: `<app-calendar-week [weekLog]="weekLog"></app-calendar-week>`
   })
   class TestHostComponent {
-    weekLog = weekLog1;
+    weekLog = cloneDeep(weekLog1); // assign deep copy;
   }
 
   let component: TestHostComponent;

@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import cloneDeep from 'lodash.clonedeep';
 
 import { CalendarItemComponent } from './calendar-item.component';
 import { IssueLabelComponent } from '../issue-label/issue-label.component';
@@ -18,7 +19,7 @@ describe('CalendarItemComponent', () => {
     template: `<app-calendar-item [dayLog]="dayLog"></app-calendar-item>`
   })
   class TestHostComponent {
-    dayLog = dayLog2;
+    dayLog = cloneDeep(dayLog2);
   }
 
   let component: TestHostComponent;
@@ -77,10 +78,9 @@ describe('CalendarItemComponent', () => {
 
   it('should display modal after click', () => {
     const calendarItemElement = fixture.debugElement;
-    const itemBodyElement = calendarItemElement.query(By.css(('.card-body')));
+    const itemBodyElement = calendarItemElement.query(By.css('.card-body'));
     itemBodyElement.triggerEventHandler('click', null);
-    fixture.whenStable().then(() => {
-      expect(fixture.nativeElement.querySelector('.modal-dialog')).toBeTruthy();
-    });
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('.modal-dialog'))).toBeTruthy();
   });
 });

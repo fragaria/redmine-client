@@ -3,22 +3,22 @@ import {
   HttpClientTestingModule,
   HttpTestingController
 } from '@angular/common/http/testing';
+import cloneDeep from 'lodash.clonedeep';
 
 import { RedmineService } from './redmine.service';
 import { WeekLog } from './models/time-entries';
-
+import { MessageType } from './models/enums';
 
 const mockUserResponse = {
   user: {
-    api_key: 'xxxxxxxxxxxxxxxx',
-    created_on: '2019-07-01T11:13:34Z',
-    firstname: 'John',
     id: 11,
-    last_login_on: '2019-07-25T19:59:10Z',
-    lastname: 'Doe',
     login: 'john.doe@fragaria.cz',
+    firstname: 'John',
+    lastname: 'Doe',
     mail: 'john.doe@fragaria.cz',
-
+    created_on: '2019-07-01T11:13:34Z',
+    last_login_on: '2019-07-25T19:59:10Z',
+    api_key: 'xxxxxxxxxxxxxxxx',
   }
 };
 
@@ -52,15 +52,31 @@ describe('RedmineService', () => {
   });
 
   it('should authenticate', () => {
-    service.authenticate('username', 'password')
+    const username = 'username';
+    const password = 'password'
+    service.authenticate(username, password)
       .subscribe(data => {
-        expect(data).toBe(mockUserResponse.user);
-        expect((service as any).currentUser).toBe(mockUserResponse.user);
+        expect(data).toEqual(mockUserResponse.user);
+        expect((service as any).currentUser).toEqual(mockUserResponse.user);
       });
 
     const req = httpTestingController.expectOne('/api/users/current.json');
     expect(req.request.method).toEqual('GET');
-    req.flush(mockUserResponse);
+    expect(req.request.headers.get('Authorization')).toBe('Basic ' + btoa(`${username}:${password}`));
+    req.flush(cloneDeep(mockUserResponse));
+  });
+
+  it('should create error message when authentication fails', () => {
+    const messageServiceSpy = spyOn((service as any).messageService, 'add');
+
+    service.authenticate('username', 'incorrectPassword')
+      .subscribe(() => {
+        expect(messageServiceSpy).toHaveBeenCalledWith(jasmine.stringMatching('Authentication failed'),  MessageType.ERROR);
+      });
+
+    const req = httpTestingController.expectOne('/api/users/current.json');
+    expect(req.request.method).toEqual('GET');
+    req.flush(null, { status: 401, statusText: 'Unauthorized'});
   });
 
   it('should listWeekLogs including days from previous and next month', () => {
