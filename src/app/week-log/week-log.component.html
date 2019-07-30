@@ -18,12 +18,18 @@
       </div>
     </ng-container>
 
-    <div class="week-container" *ngIf="dayLogs && dayLogs.length > 0">
+    <div class="week-container week-total" *ngIf="dayLogs && dayLogs.length > 0">
       <div class="row">
         <span class="col-4">
-          <h5>Total</h5>
+          <h5 class="week-total-heading">Total</h5>
         </span>
-        <strong class="col-1 text-right total-sum">{{totalSum | number:'1.2-2'}}</strong>
+        <strong class="col-1 text-right week-total-sum" [ngClass]="{
+          'text-danger' : (totalSum < (dayLogs.length * dailyWorkingHours)),
+          'text-primary': (totalSum > (dayLogs.length * dailyWorkingHours)),
+          'text-success': (totalSum === (dayLogs.length * dailyWorkingHours))
+        }">
+          {{totalSum | number:'1.2-2'}}
+        </strong>
         <span class="col-7"></span>
       </div>
 

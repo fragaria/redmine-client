@@ -10,3 +10,12 @@
 .week-container:nth-child(odd) {
     background: #ebeced;
 }
+.week-total {
+  margin-top: 2.1rem;
+}
+.week-total-heading {
+  font-size: 1.5rem;
+}
+.week-total-sum {
+  font-size: 1.15rem;
+}

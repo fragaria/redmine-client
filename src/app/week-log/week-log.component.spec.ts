@@ -20,7 +20,7 @@ class MockRedmineService extends RedmineService {
   }
 }
 
-describe('WeekLogComponent', () => {
+fdescribe('WeekLogComponent', () => {
   let component: WeekLogComponent;
   let fixture: ComponentFixture<WeekLogComponent>;
 
@@ -50,8 +50,8 @@ describe('WeekLogComponent', () => {
     const totalSum = dayLogs.reduce((sum, val) => sum + val.hoursLogged, 0);
     expect(component.totalSum).toBe(totalSum);
     const weekLogElement: HTMLElement = fixture.nativeElement;
-    const totalSumElement = weekLogElement.querySelector('.total-sum');
-    expect(totalSumElement.textContent).toEqual(totalSum.toString());
+    const totalSumElement = weekLogElement.querySelector('.week-total-sum');
+    expect(totalSumElement.textContent.trim()).toEqual(totalSum.toString());
   });
 
   it('should generate nonemmpty weeks', () => {
