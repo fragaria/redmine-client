@@ -147,8 +147,8 @@ export class RedmineService {
     let min = moment(weekOrMonth, html5fmt).startOf(period);
     let max = moment(weekOrMonth, html5fmt).endOf(period);
     if (includeWholeWeek) {
-      min = min.startOf('isoWeek');
-      max = max.endOf('isoWeek');
+      min = min.startOf('week');
+      max = max.endOf('week');
     }
 
     const dateToProcess = desc ? max.clone() : min.clone();
