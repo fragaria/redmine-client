@@ -46,14 +46,12 @@ describe('WeekLogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should calculate totalSum', () => {
-    expect(component.totalSum).toBe(dayLog1.hoursLogged + dayLog2.hoursLogged);
-  });
-
-  it('should display totalSum', () => {
+  it('should calculate correctly total sum of logged hours and display it', () => {
+    const totalSum = dayLogs.reduce((sum, val) => sum + val.hoursLogged, 0);
+    expect(component.totalSum).toBe(totalSum);
     const weekLogElement: HTMLElement = fixture.nativeElement;
     const totalSumElement = weekLogElement.querySelector('.total-sum');
-    expect(totalSumElement.textContent).toEqual((dayLog1.hoursLogged + dayLog2.hoursLogged).toString());
+    expect(totalSumElement.textContent).toEqual(totalSum.toString());
   });
 
   it('should generate nonemmpty weeks', () => {
