@@ -1,6 +1,6 @@
 import { AppRoutingModule } from './app-routing.module';
 import { TestBed } from '@angular/core/testing';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 
 describe('AppRoutingModule', () => {
   let appRoutingModule: AppRoutingModule;
