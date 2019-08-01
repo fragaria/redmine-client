@@ -32,7 +32,7 @@ const routes: Routes = [
 export class AppRoutingModule {
 
   constructor(
-    private router:Router
+    private router: Router
   ) {
   }
 

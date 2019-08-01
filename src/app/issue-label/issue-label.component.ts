@@ -13,7 +13,7 @@ export class IssueLabelComponent implements OnInit {
 
   @Input() issueId: number;
 
-  label: string = "";
+  label = '';
 
   constructor(
     private redmine: RedmineService
@@ -22,7 +22,7 @@ export class IssueLabelComponent implements OnInit {
   ngOnInit() {
     this.redmine.getIssueById(this.issueId).subscribe(
       issue => {
-        this.label = (issue !== undefined) ? issue.subject : "Issue #" + this.issueId
+        this.label = (issue !== undefined) ? issue.subject : 'Issue #' + this.issueId;
       }
     );
   }

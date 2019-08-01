@@ -38,8 +38,8 @@ export class DailyTimeEntryComponent implements OnInit {
     // debugger;
     const defaultHours = (this.hoursToBeLogged > 0) ? this.hoursToBeLogged : this.settings.get().defaultHours;
     const defaultIssueId = this.settings.get().defaultIssueId;
-    this.timeEntryForm = this.formBuilder.group ({
-      issueId: [(defaultIssueId !== undefined && defaultIssueId != null) ? defaultIssueId : null, Validators.required],
+    this.timeEntryForm = this.formBuilder.group({
+      issueId: [(defaultIssueId !== undefined && defaultIssueId !== null) ? defaultIssueId : null, Validators.required],
       hours: [defaultHours, [Validators.required, Validators.min(0.25), Validators.max(24)]],
       activityId: [null, Validators.required],
       comment: ['', Validators.maxLength(this.commentMaxLength)]
@@ -49,7 +49,7 @@ export class DailyTimeEntryComponent implements OnInit {
       // debugger;
       this.redmine.getDefaultActivity().subscribe((defaultActivity: Field) => {
         // debugger;
-        this.timeEntryForm.patchValue({activityId: defaultActivity.id});
+        this.timeEntryForm.patchValue({ activityId: defaultActivity.id });
         this.redmine.listMyIssues().subscribe(issueList => {
           this.issues = issueList.issues;
         });
@@ -59,7 +59,9 @@ export class DailyTimeEntryComponent implements OnInit {
 
   createNewTimeEntry() {
     // debugger;
-    const activityId = (typeof this.timeEntryForm.value.activityId == "string") ? parseInt(this.timeEntryForm.value.activityId, 10) : this.timeEntryForm.value.activityId;
+    const activityId = (typeof this.timeEntryForm.value.activityId === 'string')
+      ? parseInt(this.timeEntryForm.value.activityId, 10)
+      : this.timeEntryForm.value.activityId;
     const activityName = this.redmine.getActivityById(activityId).name;
     const newTimeEntry = {
       issue_id: this.timeEntryForm.value.issueId,
@@ -71,7 +73,7 @@ export class DailyTimeEntryComponent implements OnInit {
     };
     this.redmine.createNewTimeEntry(newTimeEntry).subscribe(created => {
       this.hoursToBeLogged -= created.hours;
-      this.initTimeEntryForm()
+      this.initTimeEntryForm();
       this.newEntryEmitter.emit(created);
     });
   }

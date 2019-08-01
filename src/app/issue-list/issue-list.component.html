@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xl-9">
-      <h2>Your issues <span *ngIf="issues && issues.length != total_count">({{issues.length}}/{{total_count}}) </span>
+      <h2>Your issues <span *ngIf="issues && issues.length !== total_count">({{issues.length}}/{{total_count}}) </span>
         <a (click)=getIssues()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a>
       </h2>
     </div>
@@ -12,7 +12,7 @@
 
   <div *ngIf="issues" class="container-fluid">
     <div *ngFor="let issue of issues" class="issue-container">
-      <app-issue [issue]="issue" ></app-issue>
+      <app-issue [issue]="issue"></app-issue>
     </div>
   </div>
 </div>

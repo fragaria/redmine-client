@@ -21,15 +21,15 @@ export class CalendarItemComponent implements OnInit {
 
   dailyWorkingHours: number;
 
-  showLog: boolean = false;
-  showNewLogForm: boolean = false;
+  showLog = false;
+  showNewLogForm = false;
 
   newEntryTimeout = 10000;
 
   timeEntries = [];
 
-  @ViewChild('autoShownModal') autoShownModal: ModalDirective;
-  isModalShown: boolean = false;
+  @ViewChild('autoShownModal', { static: false }) autoShownModal: ModalDirective;
+  isModalShown = false;
 
   showModal(): void {
     this.isModalShown = true;
@@ -51,7 +51,7 @@ export class CalendarItemComponent implements OnInit {
 
   ngOnInit() {
     this.dailyWorkingHours = this.settings.get().dailyWorkingHours;
-    if(this.dayLog.timeEntries !== undefined && this.dayLog.timeEntries != null) {
+    if (this.dayLog.timeEntries !== undefined && this.dayLog.timeEntries !== null) {
       this.timeEntries = this.dayLog.timeEntries.time_entries;
     }
   }

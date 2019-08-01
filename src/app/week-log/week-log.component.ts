@@ -15,7 +15,8 @@ import { DayLog, Week } from '../models/time-entries';
 })
 export class WeekLogComponent implements OnInit {
 
-  weekHtml5fmt: string = `${moment().year()}-W${moment().isoWeek() < 10 ? '0' : ''}${moment().isoWeek()}`; // formatting moment using HTML5_FMT has issues; use only when setting a date
+  // formatting moment using HTML5_FMT has issues; use only when setting a date
+  weekHtml5fmt = `${moment().year()}-W${moment().isoWeek() < 10 ? '0' : ''}${moment().isoWeek()}`;
   weeks = [];
 
   dayLogs: DayLog[];
@@ -37,16 +38,16 @@ export class WeekLogComponent implements OnInit {
   private initWeeks() {
     let weekNumber = moment().week();
     let year = moment().year();
-    for(let i = 0; i < 8; i++, weekNumber--) {
-      if(weekNumber < 1) {
+    for (let i = 0; i < 8; i++ , weekNumber--) {
+      if (weekNumber < 1) {
         weekNumber = 52;
         year--;
       }
-      const min = moment().week(weekNumber).year(year).startOf("week").format("YYYY-MM-DD");
-      const max = moment().week(weekNumber).year(year).endOf("week").subtract(2, 'days').format("YYYY-MM-DD");
+      const min = moment().week(weekNumber).year(year).startOf('week').format('YYYY-MM-DD');
+      const max = moment().week(weekNumber).year(year).endOf('week').subtract(2, 'days').format('YYYY-MM-DD');
       this.weeks.push({
-       html5fmt: `${year}-W${weekNumber < 10 ? '0' : ''}${weekNumber}`,
-       period: `${weekNumber}. week: ${min} - ${max}`
+        html5fmt: `${year}-W${weekNumber < 10 ? '0' : ''}${weekNumber}`,
+        period: `${weekNumber}. week: ${min} - ${max}`
       });
     }
   }

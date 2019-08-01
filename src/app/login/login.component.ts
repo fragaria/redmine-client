@@ -23,18 +23,18 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = new FormGroup({
-      username: new FormControl(""/*, Validators.required*/),
-      password: new FormControl(""/*, Validators.required*/)
+      username: new FormControl(''/*, Validators.required*/),
+      password: new FormControl(''/*, Validators.required*/)
     });
   }
 
   authenticate() {
     this.redmine.authenticate(this.loginForm.value.username, this.loginForm.value.password).subscribe(user => {
-      if(user !== undefined && user != null) {
+      if (user !== undefined && user !== null) {
         this.username.emit(user.firstname);
         this.router.navigateByUrl(this.router.url);
       } else {
-        console.log("Unauthenticated.");
+        console.log('Unauthenticated.');
       }
     });
   }

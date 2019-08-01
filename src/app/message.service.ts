@@ -14,11 +14,11 @@ export class MessageService {
   constructor() { }
 
   add(message: string, messageType?: MessageType) {
-    if(messageType == MessageType.ERROR) {
+    if (messageType === MessageType.ERROR) {
       this.errors.push(message);
     } else {
       this.messages.push(message);
-      let root = this;
+      const root = this;
       setTimeout(function() {
         root.remove(message);
       }, this.infoMessageTimeout);
@@ -26,21 +26,21 @@ export class MessageService {
   }
 
   remove(message: string, messageType?: MessageType) {
-    if(messageType == MessageType.ERROR) {
-      let msgIndex = this.errors.indexOf(message);
-      if(msgIndex > -1) {
+    if (messageType === MessageType.ERROR) {
+      const msgIndex = this.errors.indexOf(message);
+      if (msgIndex > -1) {
         this.errors.splice(msgIndex, 1);
       }
     } else {
-      let msgIndex = this.messages.indexOf(message);
-      if(msgIndex > -1) {
+      const msgIndex = this.messages.indexOf(message);
+      if (msgIndex > -1) {
         this.messages.splice(msgIndex, 1);
       }
     }
   }
 
   list(messageType?: MessageType): string[] {
-    if(messageType == MessageType.ERROR) {
+    if (messageType === MessageType.ERROR) {
       return this.errors;
     } else {
       return this.messages;

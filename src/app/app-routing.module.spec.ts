@@ -1,10 +1,18 @@
 import { AppRoutingModule } from './app-routing.module';
+import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 
 describe('AppRoutingModule', () => {
   let appRoutingModule: AppRoutingModule;
+  let router: Router;
 
   beforeEach(() => {
-    appRoutingModule = new AppRoutingModule();
+    TestBed.configureTestingModule({
+      imports: [AppRoutingModule]
+    });
+    router = TestBed.get(Router);
+    appRoutingModule = new AppRoutingModule(router);
+
   });
 
   it('should create an instance', () => {
