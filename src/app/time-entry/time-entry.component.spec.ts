@@ -68,13 +68,13 @@ describe('TimeEntryComponent', () => {
     expect(component.logPeriod).toBe(false);
     const timeEntryElement = fixture.debugElement;
     const buttonElement = timeEntryElement.query(By.css(('.input-group-text')));
+    const toggleLogPeriodSpy = spyOn(component, 'toggleLogPeriod').and.callThrough();
 
     buttonElement.triggerEventHandler('click', null);
-    fixture.whenStable().then(() => {
-      expect(component.logPeriod).toBe(true);
-      fixture.detectChanges();
-      expect(component.timeEntryForm.valid).toBeFalsy();
-    });
+    expect(component.logPeriod).toBe(true);
+    fixture.detectChanges();
+    expect(component.timeEntryForm.valid).toBeFalsy();
+    expect(toggleLogPeriodSpy).toHaveBeenCalled();
   });
 
   it('should post new entry', () => {
@@ -95,15 +95,17 @@ describe('TimeEntryComponent', () => {
   });
 
   it('should post new entries when logging period', () => {
-    component.logPeriod = true;
     const issueId = 2609;
     const commentText = 'Comment';
     const date1 = moment();
     const date2 = moment();
     date2.add(5, 'days');
     component.issueId = issueId;
+    component.toggleLogPeriod();
+    component.timeEntryForm.controls['from'].setValue('');
     component.timeEntryForm.controls['comment'].setValue(commentText);
     component.timeEntryForm.controls['period'].setValue([date1.format('YYYY-MM-DD'), date2.format('YYYY-MM-DD')]);
+
     expect(component.timeEntryForm.valid).toBeTruthy();
 
     component.newEntryEmitter.subscribe(newEntry => {
@@ -115,5 +117,29 @@ describe('TimeEntryComponent', () => {
       date1.add(1, 'days');
     });
     component.createNewTimeEntry();
+  });
+
+  it('should validate the form correctly', () => {
+    expect(component.timeEntryForm.valid).toBeTruthy();
+    component.timeEntryForm.controls['from'].setValue('');
+    expect(component.timeEntryForm.valid).toBeFalsy();
+
+    const date1 = moment();
+    const date2 = moment();
+    date2.add(5, 'days');
+    component.toggleLogPeriod();
+    expect(component.timeEntryForm.valid).toBeFalsy();
+    component.timeEntryForm.controls['period'].setValue([date1.format('YYYY-MM-DD'), date2.format('YYYY-MM-DD')]);
+    expect(component.timeEntryForm.valid).toBeTruthy();
+
+    const longCommentText = new Array(component.commentMaxLength + 2).join('a');
+    component.timeEntryForm.controls['comment'].setValue(longCommentText);
+    expect(component.timeEntryForm.valid).toBeFalsy();
+    component.timeEntryForm.controls['comment'].setValue('');
+
+    component.timeEntryForm.controls['hours'].setValue(26);
+    expect(component.timeEntryForm.valid).toBeFalsy();
+    component.timeEntryForm.controls['hours'].setValue(0);
+    expect(component.timeEntryForm.valid).toBeFalsy();
   });
 });

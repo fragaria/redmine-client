@@ -105,6 +105,15 @@ export class TimeEntryComponent implements OnInit {
 
   toggleLogPeriod() {
     this.logPeriod = !this.logPeriod;
+    if (this.logPeriod) {
+      this.timeEntryForm.controls['from'].clearValidators();
+      this.timeEntryForm.controls['period'].setValidators([Validators.required]);
+    } else {
+      this.timeEntryForm.controls['from'].setValidators([Validators.required]);
+      this.timeEntryForm.controls['period'].clearValidators();
+    }
+    this.timeEntryForm.controls['from'].updateValueAndValidity();
+    this.timeEntryForm.controls['period'].updateValueAndValidity();
   }
 
 }
