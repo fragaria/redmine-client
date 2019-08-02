@@ -69,12 +69,15 @@ describe('TimeEntryComponent', () => {
     const timeEntryElement = fixture.debugElement;
     const buttonElement = timeEntryElement.query(By.css(('.input-group-text')));
     const toggleLogPeriodSpy = spyOn(component, 'toggleLogPeriod').and.callThrough();
+    const periodInputSelector = '[formcontrolname="period"]';
 
+    expect(timeEntryElement.query(By.css((periodInputSelector)))).toBeFalsy(); // Input for period logging is not visible
     buttonElement.triggerEventHandler('click', null);
     expect(component.logPeriod).toBe(true);
     fixture.detectChanges();
     expect(component.timeEntryForm.valid).toBeFalsy();
     expect(toggleLogPeriodSpy).toHaveBeenCalled();
+    expect(timeEntryElement.query(By.css((periodInputSelector)))).toBeTruthy(); // Input for period logging is visible
   });
 
   it('should post new entry', () => {
