@@ -98,15 +98,18 @@ describe('TimeEntryComponent', () => {
     const issueId = 2609;
     const commentText = 'Comment';
     const date1 = moment();
+    date1.add(1, 'days');
     const date2 = moment();
     date2.add(5, 'days');
     component.issueId = issueId;
     component.toggleLogPeriod();
-    component.timeEntryForm.controls['from'].setValue('');
+    component.timeEntryForm.controls['from'].setValue(moment().format('YYYY-MM-DD')); // set to date that is before the selected period
     component.timeEntryForm.controls['comment'].setValue(commentText);
     component.timeEntryForm.controls['period'].setValue([date1.format('YYYY-MM-DD'), date2.format('YYYY-MM-DD')]);
 
     expect(component.timeEntryForm.valid).toBeTruthy();
+    const newEntryEmitterSpy = spyOn(component.newEntryEmitter, 'emit').and.callThrough();
+    const redmineServiceSpy = spyOn((component as any).redmine, 'createNewTimeEntry').and.callThrough();
 
     component.newEntryEmitter.subscribe(newEntry => {
       expect(newEntry.hours).toBe(component.timeEntryForm.controls['hours'].value);
@@ -117,13 +120,17 @@ describe('TimeEntryComponent', () => {
       date1.add(1, 'days');
     });
     component.createNewTimeEntry();
+    expect(newEntryEmitterSpy).toHaveBeenCalledTimes(5);
+    expect(redmineServiceSpy).toHaveBeenCalledTimes(5);
   });
 
-  it('should validate the form correctly', () => {
+  it('should validate the form for single day logging correctly', () => {
     expect(component.timeEntryForm.valid).toBeTruthy();
     component.timeEntryForm.controls['from'].setValue('');
     expect(component.timeEntryForm.valid).toBeFalsy();
+  });
 
+  it('should validate the form for period logging correctly', () => {
     const date1 = moment();
     const date2 = moment();
     date2.add(5, 'days');
@@ -131,15 +138,21 @@ describe('TimeEntryComponent', () => {
     expect(component.timeEntryForm.valid).toBeFalsy();
     component.timeEntryForm.controls['period'].setValue([date1.format('YYYY-MM-DD'), date2.format('YYYY-MM-DD')]);
     expect(component.timeEntryForm.valid).toBeTruthy();
+  });
 
+  it('should limit the length of comment', () => {
     const longCommentText = new Array(component.commentMaxLength + 2).join('a');
     component.timeEntryForm.controls['comment'].setValue(longCommentText);
     expect(component.timeEntryForm.valid).toBeFalsy();
-    component.timeEntryForm.controls['comment'].setValue('');
+  });
 
-    component.timeEntryForm.controls['hours'].setValue(26);
+  it('should validate count of hours', () => {
+    component.timeEntryForm.controls['hours'].setValue(8);
+    expect(component.timeEntryForm.valid).toBeTruthy();
+    component.timeEntryForm.controls['hours'].setValue(25);
     expect(component.timeEntryForm.valid).toBeFalsy();
     component.timeEntryForm.controls['hours'].setValue(0);
     expect(component.timeEntryForm.valid).toBeFalsy();
   });
+
 });
