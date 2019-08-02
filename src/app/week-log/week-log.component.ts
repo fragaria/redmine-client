@@ -54,7 +54,6 @@ export class WeekLogComponent implements OnInit {
   listWorkingDayLogsForWeek() {
     this.redmine.listDayLogs(this.weekHtml5fmt, 'week', true, true, false).subscribe(dayLogs => {
       this.dayLogs = dayLogs;
-      console.log(dayLogs)
       this.totalSum = dayLogs.reduce((val, dayLog) => val + dayLog.hoursLogged, 0);
     });
   }
