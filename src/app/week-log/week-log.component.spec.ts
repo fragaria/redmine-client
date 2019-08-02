@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import cloneDeep from 'lodash.clonedeep';
 
 import { WeekLogComponent } from './week-log.component';
 import { GapComponent } from '../gap/gap.component';
@@ -13,14 +14,14 @@ import { RedmineService } from '../redmine.service';
 import { DayLog } from '../models/time-entries';
 import { dayLog1, dayLog2, emptyDayLog } from '../models/time-entries.mock';
 
-const dayLogs = [dayLog1, dayLog2, emptyDayLog];
+const MOCK_DAY_LOGS = [dayLog1, dayLog2, emptyDayLog];
 class MockRedmineService extends RedmineService {
   listDayLogs(): Observable<DayLog[]> {
-    return of(dayLogs);
+    return of(cloneDeep(MOCK_DAY_LOGS));
   }
 }
 
-fdescribe('WeekLogComponent', () => {
+describe('WeekLogComponent', () => {
   let component: WeekLogComponent;
   let fixture: ComponentFixture<WeekLogComponent>;
 
@@ -47,11 +48,11 @@ fdescribe('WeekLogComponent', () => {
   });
 
   it('should calculate correctly total sum of logged hours and display it', () => {
-    const totalSum = dayLogs.reduce((sum, val) => sum + val.hoursLogged, 0);
-    expect(component.totalSum).toBe(totalSum);
+    const expectedTotalSum = MOCK_DAY_LOGS.reduce((sum, val) => sum + val.hoursLogged, 0);
+    expect(component.totalSum).toBe(expectedTotalSum);
     const weekLogElement: HTMLElement = fixture.nativeElement;
     const totalSumElement = weekLogElement.querySelector('.week-total-sum');
-    expect(totalSumElement.textContent.trim()).toEqual(totalSum.toString());
+    expect(totalSumElement.textContent.trim()).toEqual(expectedTotalSum.toString());
   });
 
   it('should generate nonemmpty weeks', () => {
@@ -65,6 +66,6 @@ fdescribe('WeekLogComponent', () => {
   it('should display record for each day', () => {
     const weekLogElement: HTMLElement = fixture.nativeElement;
     const dayItemElements = weekLogElement.querySelectorAll('.week-records app-gap');
-    expect(dayItemElements.length).toEqual(dayLogs.length);
+    expect(dayItemElements.length).toEqual(MOCK_DAY_LOGS.length);
   });
 });
