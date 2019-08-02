@@ -9,7 +9,7 @@ import { RedmineService } from './redmine.service';
 import { WeekLog } from './models/time-entries';
 import { MessageType } from './models/enums';
 
-const mockUserResponse = {
+const MOCK_USER_RESPONSE = {
   user: {
     id: 11,
     login: 'john.doe@fragaria.cz',
@@ -22,7 +22,7 @@ const mockUserResponse = {
   }
 };
 
-const mockListEntryResponse = {
+const MOCK_LIST_ENTRY_RESPONSE = {
   time_entries: [],
   total_count: 0,
   offset: 0,
@@ -56,14 +56,14 @@ describe('RedmineService', () => {
     const password = 'password'
     service.authenticate(username, password)
       .subscribe(data => {
-        expect(data).toEqual(mockUserResponse.user);
-        expect((service as any).currentUser).toEqual(mockUserResponse.user);
+        expect(data).toEqual(MOCK_USER_RESPONSE.user);
+        expect((service as any).currentUser).toEqual(MOCK_USER_RESPONSE.user);
       });
 
     const req = httpTestingController.expectOne('/api/users/current.json');
     expect(req.request.method).toEqual('GET');
     expect(req.request.headers.get('Authorization')).toBe('Basic ' + btoa(`${username}:${password}`));
-    req.flush(cloneDeep(mockUserResponse));
+    req.flush(cloneDeep(MOCK_USER_RESPONSE));
   });
 
   it('should create error message when authentication fails', () => {
@@ -80,7 +80,7 @@ describe('RedmineService', () => {
   });
 
   it('should listWeekLogs including days from previous and next month', () => {
-    (service as any).currentUser = mockUserResponse.user;
+    (service as any).currentUser = MOCK_USER_RESPONSE.user;
     service.listWeekLogs('2019-08').subscribe((data: WeekLog[]) => {
       expect(data.length).toBe(5);
       data.forEach((week) => {
@@ -91,7 +91,7 @@ describe('RedmineService', () => {
 
     const req = httpTestingController.expectOne('/api/time_entries.json?user_id=11&spent_on=><2019-07-29|2019-09-01&limit=99');
     expect(req.request.method).toEqual('GET');
-    req.flush(mockListEntryResponse);
+    req.flush(cloneDeep(MOCK_LIST_ENTRY_RESPONSE));
   });
 
 });

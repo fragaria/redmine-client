@@ -18,11 +18,11 @@ import { RedmineService } from '../redmine.service';
 import { weekLog1 } from '../models/time-entries.mock';
 import { WeekLog } from '../models/time-entries';
 
-const mockWeekLogs = [weekLog1, weekLog1]
+const MOCK_WEEK_LOGS = [weekLog1, weekLog1];
 
 class MockRedmineService extends RedmineService {
   listWeekLogs(): Observable<WeekLog[]> {
-    return of(cloneDeep(mockWeekLogs));
+    return of(cloneDeep(MOCK_WEEK_LOGS));
   }
 }
 
@@ -65,17 +65,18 @@ describe('CalendarComponent', () => {
     const calendarElement = fixture.debugElement;
     const iconElement = calendarElement.query(By.css(('.reload-button')));
     const listWeekLogsSpy = spyOn(component, 'listWorkingWeekLogs').and.callThrough();
-    const expectedWeekLogs = [weekLog1];
-    const redmineSpy = spyOn((component as any).redmine, 'listWeekLogs').and.returnValue(of(cloneDeep([weekLog1])));
+    const redmineSpy = spyOn((component as any).redmine, 'listWeekLogs')
+      .and.returnValue(of(cloneDeep([weekLog1])));
+    const expectedWeekLogsAfterClick = [weekLog1];
 
-    expect(component.weekLogs).toEqual(mockWeekLogs);
+    expect(component.weekLogs).toEqual(MOCK_WEEK_LOGS); // has data from MockRedmineService
 
-    iconElement.triggerEventHandler('click', null);
+    iconElement.triggerEventHandler('click', null); // reload data
     fixture.detectChanges();
 
     expect(listWeekLogsSpy).toHaveBeenCalled();
     expect(redmineSpy).toHaveBeenCalledWith(component.monthHtml5fmt);
-    expect(component.weekLogs).toEqual(expectedWeekLogs);
+    expect(component.weekLogs).toEqual(expectedWeekLogsAfterClick);
   });
 
   it('should fetch data after selecting a month', () => {
