@@ -64,20 +64,35 @@ describe('TimeEntryComponent', () => {
     expect(component.timeEntryForm.controls['comment'].value).toBe('');
   });
 
-  it('should have toggle period button', () => {
+  it('should switch the date input type between single day logging and period logging after click on the toggle button', () => {
     expect(component.logPeriod).toBe(false);
     const timeEntryElement = fixture.debugElement;
-    const buttonElement = timeEntryElement.query(By.css(('.input-group-text')));
+    const toggleButtonElement = timeEntryElement.query(By.css(('.input-group-text')));
     const toggleLogPeriodSpy = spyOn(component, 'toggleLogPeriod').and.callThrough();
     const periodInputSelector = '[formcontrolname="period"]';
+    const singleDayInputSelector = '[formcontrolname="from"]';
 
-    expect(timeEntryElement.query(By.css((periodInputSelector)))).toBeFalsy(); // Input for period logging is not visible
-    buttonElement.triggerEventHandler('click', null);
-    expect(component.logPeriod).toBe(true);
+    // Form is by default in the mode for single day logging
+    expect(timeEntryElement.query(By.css((singleDayInputSelector)))).toBeTruthy();
+    expect(timeEntryElement.query(By.css((periodInputSelector)))).toBeFalsy();
+
+    toggleButtonElement.triggerEventHandler('click', null);
     fixture.detectChanges();
-    expect(component.timeEntryForm.valid).toBeFalsy();
+
+    // After click is input for period logging rendered
+    expect(timeEntryElement.query(By.css((singleDayInputSelector)))).toBeFalsy();
+    expect(timeEntryElement.query(By.css((periodInputSelector)))).toBeTruthy();
+    expect(component.logPeriod).toBe(true);
     expect(toggleLogPeriodSpy).toHaveBeenCalled();
-    expect(timeEntryElement.query(By.css((periodInputSelector)))).toBeTruthy(); // Input for period logging is visible
+
+    toggleButtonElement.triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    // After another click is input for single day logging rendered again
+    expect(timeEntryElement.query(By.css((singleDayInputSelector)))).toBeTruthy();
+    expect(timeEntryElement.query(By.css((periodInputSelector)))).toBeFalsy();
+    expect(component.logPeriod).toBe(false);
+    expect(toggleLogPeriodSpy).toHaveBeenCalledTimes(2);
   });
 
   it('should post new entry', () => {
