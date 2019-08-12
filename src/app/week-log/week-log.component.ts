@@ -1,12 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { MessageService } from '../message.service';
 import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
 
-import { DayLog, Week } from '../models/time-entries';
+import { DayLog } from '../models/time-entries';
 
 @Component({
   selector: 'app-week-log',
@@ -21,10 +20,10 @@ export class WeekLogComponent implements OnInit {
 
   dayLogs: DayLog[];
 
+  totalSum: number;
   dailyWorkingHours: number;
 
   constructor(
-    private messageService: MessageService,
     private redmine: RedmineService,
     private settings: SettingsService
   ) { }
@@ -54,8 +53,8 @@ export class WeekLogComponent implements OnInit {
 
   listWorkingDayLogsForWeek() {
     this.redmine.listDayLogs(this.weekHtml5fmt, 'week', true, true, false).subscribe(dayLogs => {
-      // debugger;
       this.dayLogs = dayLogs;
+      this.totalSum = dayLogs.reduce((val, dayLog) => val + dayLog.hoursLogged, 0);
     });
   }
 

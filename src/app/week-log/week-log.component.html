@@ -1,8 +1,9 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-xl-9">
-      <h2>Working week log <a (click)=listWorkingDayLogsForWeek()><img alt="reload" src="../assets/refresh-icon-png-4.jpg" class="reload" /></a>
-    </h2>
+      <h2>Working week log <a (click)=listWorkingDayLogsForWeek()><img alt="reload"
+            src="../assets/refresh-icon-png-4.jpg" class="reload" /></a>
+      </h2>
     </div>
     <div class="col-3 align-right">
       <select class="custom-select d-block w-100" (change)="setWeek($event.target.value)">
@@ -12,9 +13,26 @@
   </div>
   <div class="container-fluid">
     <ng-container *ngFor="let dayLog of dayLogs | keyvalue">
-      <div class="week-container">
-        <app-gap [dayLog]="dayLog.value" ></app-gap>
+      <div class="week-container week-records">
+        <app-gap [dayLog]="dayLog.value"></app-gap>
       </div>
     </ng-container>
+
+    <div class="week-container week-total" *ngIf="dayLogs && dayLogs.length > 0">
+      <div class="row">
+        <span class="col-4">
+          <h5 class="week-total-heading">Total</h5>
+        </span>
+        <strong class="col-1 text-right week-total-sum" [ngClass]="{
+          'text-danger' : (totalSum < (dayLogs.length * dailyWorkingHours)),
+          'text-primary': (totalSum > (dayLogs.length * dailyWorkingHours)),
+          'text-success': (totalSum === (dayLogs.length * dailyWorkingHours))
+        }">
+          {{totalSum | number:'1.2-2'}}
+        </strong>
+        <span class="col-7"></span>
+      </div>
+
+    </div>
   </div>
 </div>
