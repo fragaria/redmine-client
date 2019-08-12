@@ -41,10 +41,10 @@ export class TimeEntryComponent implements OnInit {
     // debugger;
     const defaultHours = this.settings.get().defaultHours;
     const now = moment().format('YYYY-MM-DD');
-    this.timeEntryForm = this.formBuilder.group ({
+    this.timeEntryForm = this.formBuilder.group({
       from: [now, Validators.required],
       // from: [(new Date()).toISOString().substring(0, 10), Validators.required],
-      period: [[now, now], Validators.required],
+      period: [[]],
       hours: [defaultHours, [Validators.required, Validators.min(0.25), Validators.max(24)]],
       activityId: [null, Validators.required],
       comment: ['', Validators.maxLength(this.commentMaxLength)]
@@ -54,7 +54,7 @@ export class TimeEntryComponent implements OnInit {
       // debugger;
       this.redmine.getDefaultActivity().subscribe((defaultActivity: Field) => {
         // debugger;
-        this.timeEntryForm.patchValue({activityId: defaultActivity.id});
+        this.timeEntryForm.patchValue({ activityId: defaultActivity.id });
       });
     });
   }
@@ -105,6 +105,15 @@ export class TimeEntryComponent implements OnInit {
 
   toggleLogPeriod() {
     this.logPeriod = !this.logPeriod;
+    if (this.logPeriod) {
+      this.timeEntryForm.controls['from'].clearValidators();
+      this.timeEntryForm.controls['period'].setValidators([Validators.required]);
+    } else {
+      this.timeEntryForm.controls['from'].setValidators([Validators.required]);
+      this.timeEntryForm.controls['period'].clearValidators();
+    }
+    this.timeEntryForm.controls['from'].updateValueAndValidity();
+    this.timeEntryForm.controls['period'].updateValueAndValidity();
   }
 
 }
