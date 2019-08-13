@@ -10,3 +10,6 @@
 .week-sum-body {
   padding: 0.41rem;
 }
+.dimmed {
+  opacity: 0.4;
+}

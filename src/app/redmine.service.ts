@@ -136,31 +136,31 @@ export class RedmineService {
     momentUnit: string,
     includeFuture: boolean = true,
     onlyWorkingDays: boolean = true,
-    desc: boolean = true
+    desc: boolean = true,
+    includeWholeWeek = false
   ): Observable<DayLog[]> {
     const logMap = [];
-    // debugger;
-
     const period = momentUnit as moment.unitOfTime.StartOf;
     // Using GGGG as ISO year format for week in order to fix https://github.com/moment/moment/pull/4700
     const html5fmt = momentUnit === 'week' ? 'GGGG-[W]WW' : 'YYYY-MM';
 
-    const min = moment(weekOrMonth, html5fmt).startOf(period);
-    const max = moment(weekOrMonth, html5fmt).endOf(period);
+    const timeRangeStart = moment(weekOrMonth, html5fmt).startOf(period);
+    const timeRangeEnd = moment(weekOrMonth, html5fmt).endOf(period);
+    const min = includeWholeWeek ? moment(timeRangeStart).startOf('week') : timeRangeStart;
+    const max = includeWholeWeek ? moment(timeRangeEnd).endOf('week') : timeRangeEnd;
 
-    const dateToProcess = desc ? moment(weekOrMonth, html5fmt).endOf(period) : moment(weekOrMonth, html5fmt);
+    const dateToProcess = desc ? max.clone() : min.clone();
     const now = moment();
 
-    while (
-      (desc && (dateToProcess.isAfter(min, 'day') || dateToProcess.isSame(min, 'day'))) ||
-      (!desc && (dateToProcess.isBefore(max, 'day') || dateToProcess.isSame(max, 'day')))
-    ) {
+    while (dateToProcess.isSameOrAfter(min, 'day') && dateToProcess.isSameOrBefore(max, 'day')) {
       if ((includeFuture || dateToProcess.isBefore(now, 'day') || dateToProcess.isSame(now, 'day')) // skip if future
         && (!onlyWorkingDays || dateToProcess.isoWeekday() < 6)) {
         const dateToProcessString = dateToProcess.format('YYYY-MM-DD');
         logMap[dateToProcessString] = {
           date: dateToProcessString,
           dayOfWeek: dateToProcess.isoWeekday(),
+          isInFuture: dateToProcess.isAfter(now),
+          outsideRange: dateToProcess.isBefore(timeRangeStart) || dateToProcess.isAfter(timeRangeEnd),
           timeEntries: new TimeEntryList(),
           hoursLogged: 0
         };
@@ -205,7 +205,7 @@ export class RedmineService {
   listWeekLogs(month: string): Observable<WeekLog[]> {
     const mmt = moment(month, moment.HTML5_FMT.MONTH).startOf('month');
     const monthNumber = mmt.month();
-    return this.listDayLogs(month, 'month', true, false, false).pipe(
+    return this.listDayLogs(month, 'month', true, false, false, true).pipe(
       map((workingDayLogs: DayLog[]) => {
         let offset = 0;
         const weekLogs: WeekLog[] = [];

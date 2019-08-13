@@ -2,8 +2,8 @@
   <h5 class="card-title" [ngClass]="{
     'text-primary': ((dayLog.dayOfWeek < 6 && dayLog.hoursLogged > dailyWorkingHours) || dayLog.dayOfWeek > 5),
     'text-success': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged === dailyWorkingHours),
-    'text-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours),
-    'text-secondary': (dayLog.dayOfWeek > 5 && dayLog.hoursLogged === 0)
+    'text-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours && !dayLog.isInFuture),
+    'text-secondary': ((dayLog.dayOfWeek > 5 && dayLog.hoursLogged === 0) || (dayLog.isInFuture && dayLog.hoursLogged === 0 && dayLog.dayOfWeek < 6))
   }">{{dayLog.date}}</h5>
   <p class="card-text">
     <span *ngFor="let entry of timeEntries" class="small d-block text-truncate">{{entry.hours}}h&nbsp;<app-issue-label [issueId]="entry.issue.id"></app-issue-label></span>
@@ -13,7 +13,9 @@
   'bg-primary': ((dayLog.dayOfWeek < 6 && dayLog.hoursLogged > dailyWorkingHours) || dayLog.dayOfWeek > 5),
   'bg-success': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged === dailyWorkingHours),
   'bg-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours),
-  'bg-secondary': (dayLog.dayOfWeek > 5 && dayLog.hoursLogged === 0)
+  'bg-secondary': (dayLog.dayOfWeek > 5 && dayLog.hoursLogged === 0),
+  'bg-light' : (dayLog.isInFuture && dayLog.hoursLogged === 0 && dayLog.dayOfWeek < 6),
+  'text-secondary' : (dayLog.isInFuture && dayLog.hoursLogged === 0 && dayLog.dayOfWeek < 6)
 }">
   Total: <span>{{dayLog.hoursLogged}}</span>
 </div>

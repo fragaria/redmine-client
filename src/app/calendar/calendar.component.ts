@@ -17,6 +17,7 @@ export class CalendarComponent implements OnInit {
   monthHtml5fmt = `${moment().year()}-${moment().month() < 9 ? '0' : ''}${moment().month() + 1}`;
   weekLogs: WeekLog[] = [];
   months = [];
+  hoursSum?: Number;
 
   constructor(
     private redmine: RedmineService
@@ -31,6 +32,19 @@ export class CalendarComponent implements OnInit {
     this.redmine.listWeekLogs(this.monthHtml5fmt).subscribe(weekLogs => {
       // debugger;
       this.weekLogs = weekLogs;
+      const monthStart = moment(this.monthHtml5fmt, 'YYYY-MM').startOf('month');
+      const monthEnd = moment(this.monthHtml5fmt, 'YYYY-MM').endOf('month');
+      let sum = 0;
+
+      for (let i = 0; i < weekLogs.length; i++) {
+        for (let j = 0; j < weekLogs[i].dayLogs.length; j++) {
+          const dayLogDate = moment(weekLogs[i].dayLogs[j].date);
+          if (dayLogDate.isBetween(monthStart, monthEnd)) {
+            sum += weekLogs[i].dayLogs[j].hoursLogged;
+          }
+        }
+      }
+      this.hoursSum = sum;
     });
   }
 

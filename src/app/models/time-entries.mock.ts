@@ -2,7 +2,7 @@ import { DayLog, WeekLog } from './time-entries';
 
 
 export const dayLog1: DayLog = {
-    date: '2019-07-22', dayOfWeek: 1, timeEntries: {
+    date: '2019-07-22', dayOfWeek: 1, outsideRange: false, isInFuture: false, timeEntries: {
         total_count: 0,
         offset: 0,
         limit: 0,
@@ -23,7 +23,7 @@ export const dayLog1: DayLog = {
 };
 
 export const dayLog2: DayLog = {
-    date: '2019-07-22', dayOfWeek: 1, timeEntries: {
+    date: '2019-07-22', dayOfWeek: 1, outsideRange: false,  isInFuture: false, timeEntries: {
         total_count: 0,
         offset: 0,
         limit: 0,
@@ -56,7 +56,7 @@ export const dayLog2: DayLog = {
 };
 
 export const emptyDayLog: DayLog = {
-    date: '2019-07-22', dayOfWeek: 1, timeEntries: {
+    date: '2019-07-22', dayOfWeek: 1, outsideRange: false, isInFuture: false, timeEntries: {
         total_count: 0,
         offset: 0,
         limit: 0,
