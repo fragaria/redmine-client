@@ -38,6 +38,8 @@ export class DayLog {
   dayOfWeek: number; // ISO, i.e. 1-7
   timeEntries: TimeEntryList;
   hoursLogged: number;
+  isInFuture: boolean;
+  outsideRange: boolean;
 }
 
 export class WeekLog {

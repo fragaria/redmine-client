@@ -144,12 +144,10 @@ export class RedmineService {
     // Using GGGG as ISO year format for week in order to fix https://github.com/moment/moment/pull/4700
     const html5fmt = momentUnit === 'week' ? 'GGGG-[W]WW' : 'YYYY-MM';
 
-    let min = moment(weekOrMonth, html5fmt).startOf(period);
-    let max = moment(weekOrMonth, html5fmt).endOf(period);
-    if (includeWholeWeek) {
-      min = min.startOf('week');
-      max = max.endOf('week');
-    }
+    const timeRangeStart = moment(weekOrMonth, html5fmt).startOf(period);
+    const timeRangeEnd = moment(weekOrMonth, html5fmt).endOf(period);
+    const min = includeWholeWeek ? moment(timeRangeStart).startOf('week') : timeRangeStart;
+    const max = includeWholeWeek ? moment(timeRangeEnd).endOf('week') : timeRangeEnd;
 
     const dateToProcess = desc ? max.clone() : min.clone();
     const now = moment();
@@ -161,6 +159,8 @@ export class RedmineService {
         logMap[dateToProcessString] = {
           date: dateToProcessString,
           dayOfWeek: dateToProcess.isoWeekday(),
+          isInFuture: dateToProcess.isAfter(now),
+          outsideRange: dateToProcess.isBefore(timeRangeStart) || dateToProcess.isAfter(timeRangeEnd),
           timeEntries: new TimeEntryList(),
           hoursLogged: 0
         };
