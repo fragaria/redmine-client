@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
@@ -14,6 +14,8 @@ export class CalendarWeekComponent implements OnInit {
 
   @Input() weekLog: WeekLog;
 
+  @Output() newEntryEmitter = new EventEmitter<TimeEntry>();
+
   dailyWorkingHours: number;
 
   constructor(
@@ -26,8 +28,9 @@ export class CalendarWeekComponent implements OnInit {
   }
 
   timeLogged(entry: TimeEntry) {
-    // this.weekLog.timeEntries.time_entries.splice(0, 0, entry);
     this.weekLog.hoursLogged += entry.hours;
+    // resend;
+    this.newEntryEmitter.emit(entry);
   }
 
   skippedWorkingDays(weekLog: WeekLog): number[] {

@@ -4,7 +4,7 @@ import * as moment from 'moment';
 
 import { RedmineService } from '../redmine.service';
 
-import { WeekLog } from '../models/time-entries';
+import { TimeEntry, WeekLog } from '../models/time-entries';
 
 @Component({
   selector: 'app-calendar',
@@ -17,7 +17,7 @@ export class CalendarComponent implements OnInit {
   monthHtml5fmt = `${moment().year()}-${moment().month() < 9 ? '0' : ''}${moment().month() + 1}`;
   weekLogs: WeekLog[] = [];
   months = [];
-  hoursSum?: Number;
+  hoursSum?: number;
 
   constructor(
     private redmine: RedmineService
@@ -71,5 +71,9 @@ export class CalendarComponent implements OnInit {
       });
     }
     return months;
+  }
+
+  addToHoursSum(newEntry: TimeEntry) {
+    this.hoursSum += newEntry.hours;
   }
 }
