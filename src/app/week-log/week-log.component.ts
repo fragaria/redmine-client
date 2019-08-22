@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import { RedmineService } from '../redmine.service';
 import { SettingsService } from '../settings.service';
 
-import { DayLog } from '../models/time-entries';
+import { DayLog, TimeEntry } from '../models/time-entries';
 
 @Component({
   selector: 'app-week-log',
@@ -62,6 +62,10 @@ export class WeekLogComponent implements OnInit {
     // debugger;
     this.weekHtml5fmt = week;
     this.listWorkingDayLogsForWeek();
+  }
+
+  addToTotalSum(newEntry: TimeEntry) {
+    this.totalSum += newEntry.hours;
   }
 
 }
