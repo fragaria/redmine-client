@@ -8,6 +8,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
@@ -17,7 +19,6 @@ import { TimeEntriesComponent } from './time-entries/time-entries.component';
 import { TimeEntryComponent } from './time-entry/time-entry.component';
 import { IssueComponent } from './issue/issue.component';
 import { WeekLogComponent } from './week-log/week-log.component';
-import { MessagesComponent } from './messages/messages.component';
 import { SettingsComponent } from './settings/settings.component';
 import { GapsComponent } from './gaps/gaps.component';
 import { GapComponent } from './gap/gap.component';
@@ -26,6 +27,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarItemComponent } from './calendar-item/calendar-item.component';
 import { IssueLabelComponent } from './issue-label/issue-label.component';
 import { CalendarWeekComponent } from './calendar-week/calendar-week.component';
+import { ToastsContainerComponent } from './toasts/toast-container.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,7 @@ import { CalendarWeekComponent } from './calendar-week/calendar-week.component';
     TimeEntryComponent,
     IssueComponent,
     WeekLogComponent,
-    MessagesComponent,
+    ToastsContainerComponent,
     SettingsComponent,
     GapsComponent,
     GapComponent,
@@ -53,6 +55,7 @@ import { CalendarWeekComponent } from './calendar-week/calendar-week.component';
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
+    NgbToastModule,
     BsDatepickerModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot()

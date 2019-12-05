@@ -1,3 +1,4 @@
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
 <div *ngIf="username; else login">
   <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
     <h5 class="my-0 mr-md-auto font-weight-normal">Redmine can be sexy, {{username}}</h5>
@@ -11,10 +12,8 @@
       <a (click)="logout()" class="btn btn-outline-primary">Logout</a>
     </nav>
   </div>
-  <app-messages></app-messages>
   <router-outlet></router-outlet>
 </div>
 <ng-template #login>
   <app-login (username)="setUsername($event)"></app-login>
-  <app-messages></app-messages>
 </ng-template>
