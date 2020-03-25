@@ -2,7 +2,8 @@
   <h5 class="card-title" [ngClass]="{
     'text-primary': ((dayLog.dayOfWeek < 6 && dayLog.hoursLogged > dailyWorkingHours) || dayLog.dayOfWeek > 5),
     'text-success': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged === dailyWorkingHours),
-    'text-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours && !dayLog.isInFuture),
+    'text-warning': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged > 0 && dayLog.hoursLogged < dailyWorkingHours),
+    'text-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged === 0 && !dayLog.isInFuture),
     'text-secondary': ((dayLog.dayOfWeek > 5 && dayLog.hoursLogged === 0) || (dayLog.isInFuture && dayLog.hoursLogged === 0 && dayLog.dayOfWeek < 6))
   }">{{dayLog.date}}</h5>
   <p class="card-text">
@@ -12,7 +13,8 @@
 <div class="card-footer text-white bottom-align-text" [ngClass]="{
   'bg-primary': ((dayLog.dayOfWeek < 6 && dayLog.hoursLogged > dailyWorkingHours) || dayLog.dayOfWeek > 5),
   'bg-success': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged === dailyWorkingHours),
-  'bg-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged < dailyWorkingHours),
+  'bg-warning': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged > 0 && dayLog.hoursLogged < dailyWorkingHours),
+  'bg-danger': (dayLog.dayOfWeek < 6 && dayLog.hoursLogged === 0),
   'bg-secondary': (dayLog.dayOfWeek > 5 && dayLog.hoursLogged === 0),
   'bg-light' : (dayLog.isInFuture && dayLog.hoursLogged === 0 && dayLog.dayOfWeek < 6),
   'text-secondary' : (dayLog.isInFuture && dayLog.hoursLogged === 0 && dayLog.dayOfWeek < 6)
