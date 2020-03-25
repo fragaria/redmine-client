@@ -35,7 +35,7 @@ const PROXY_CONFIG = [
           if(path.startsWith('/api/time_entries.json')) {
             return '/api/redmine-time/v1/time_entries/';
           }
-          return 'unknow'
+          return 'unknown'
         },
 
     // control logging
