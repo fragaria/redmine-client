@@ -39,8 +39,8 @@ describe('RedmineService', () => {
       imports: [HttpClientTestingModule]
     });
 
-    httpTestingController = TestBed.get(HttpTestingController);
-    service = TestBed.get(RedmineService);
+    httpTestingController = TestBed.inject(HttpTestingController);
+    service = TestBed.inject(RedmineService);
   });
 
   afterEach(() => {
@@ -53,7 +53,7 @@ describe('RedmineService', () => {
 
   it('should authenticate', () => {
     const username = 'username';
-    const password = 'password'
+    const password = 'password';
     service.authenticate(username, password)
       .subscribe(data => {
         expect(data).toEqual(MOCK_USER_RESPONSE.user);

@@ -10,7 +10,7 @@ describe('AppRoutingModule', () => {
     TestBed.configureTestingModule({
       imports: [AppRoutingModule]
     });
-    router = TestBed.get(Router);
+    router = TestBed.inject(Router);
     appRoutingModule = new AppRoutingModule(router);
 
   });

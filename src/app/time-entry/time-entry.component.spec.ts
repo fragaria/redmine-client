@@ -39,7 +39,7 @@ describe('TimeEntryComponent', () => {
   }));
 
   beforeEach(() => {
-    const redmineService = TestBed.get(RedmineService);
+    const redmineService = TestBed.inject(RedmineService);
     const devActivity = { id: 1, name: 'Development' };
     const consultingActivity = { id: 1, name: 'Development' };
     (redmineService as any).activitiesEnum = [devActivity, consultingActivity];
@@ -57,8 +57,8 @@ describe('TimeEntryComponent', () => {
 
   it('should be partially filled', () => {
     expect(component.timeEntryForm.valid).toBeTruthy();
-    const settingsService = TestBed.get(SettingsService);
-    expect(component.timeEntryForm.controls['hours'].value).toBe(settingsService.settings.dailyWorkingHours);
+    const settingsService = TestBed.inject(SettingsService);
+    expect(component.timeEntryForm.controls['hours'].value).toBe(settingsService.get().dailyWorkingHours);
     expect(component.timeEntryForm.controls['from'].value).toBe(moment().format('YYYY-MM-DD'));
     expect(component.timeEntryForm.controls['period'].value).toEqual([]);
     expect(component.timeEntryForm.controls['comment'].value).toBe('');
