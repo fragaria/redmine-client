@@ -28,7 +28,7 @@ export class CalendarItemComponent implements OnInit {
 
   timeEntries = [];
 
-  @ViewChild('autoShownModal', { static: false }) autoShownModal: ModalDirective;
+  @ViewChild('autoShownModal') autoShownModal: ModalDirective;
   isModalShown = false;
 
   showModal(): void {
