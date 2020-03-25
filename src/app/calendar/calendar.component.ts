@@ -32,19 +32,18 @@ export class CalendarComponent implements OnInit {
     this.redmine.listWeekLogs(this.monthHtml5fmt).subscribe(weekLogs => {
       // debugger;
       this.weekLogs = weekLogs;
-      const monthStart = moment(this.monthHtml5fmt, 'YYYY-MM').startOf('month');
-      const monthEnd = moment(this.monthHtml5fmt, 'YYYY-MM').endOf('month');
-      let sum = 0;
+      const date = moment(this.monthHtml5fmt, 'YYYY-MM');
+      const month = date.month();
+      const year = date.year();
 
-      for (let i = 0; i < weekLogs.length; i++) {
-        for (let j = 0; j < weekLogs[i].dayLogs.length; j++) {
-          const dayLogDate = moment(weekLogs[i].dayLogs[j].date);
-          if (dayLogDate.isBetween(monthStart, monthEnd)) {
-            sum += weekLogs[i].dayLogs[j].hoursLogged;
-          }
-        }
-      }
-      this.hoursSum = sum;
+      this.hoursSum = weekLogs.reduce((wacc, currWeek) => {
+        return wacc + currWeek.dayLogs.filter((day) => {
+          const dayLogDate = moment(day.date);
+          return dayLogDate.month() === month && dayLogDate.year() === year;
+        }).reduce((dacc, currEvt) => {
+          return dacc + currEvt.hoursLogged;
+        }, 0);
+      }, 0);
     });
   }
 
