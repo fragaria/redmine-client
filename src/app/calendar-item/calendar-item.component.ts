@@ -32,7 +32,9 @@ export class CalendarItemComponent implements OnInit {
   isModalShown = false;
 
   showModal(): void {
-    this.isModalShown = true;
+    if (!this.dayLog.outsideRange) {
+      this.isModalShown = true;
+    }
   }
 
   hideModal(): void {
