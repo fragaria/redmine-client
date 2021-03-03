@@ -1,4 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { DayLog } from '../models/time-entries';
 
 import { GapComponent } from './gap.component';
 
@@ -6,9 +8,10 @@ describe('GapComponent', () => {
   let component: GapComponent;
   let fixture: ComponentFixture<GapComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GapComponent ]
+      declarations: [ GapComponent ],
+      imports: [HttpClientTestingModule]
     })
     .compileComponents();
   }));
@@ -16,6 +19,7 @@ describe('GapComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(GapComponent);
     component = fixture.componentInstance;
+    component.dayLog = new DayLog();
     fixture.detectChanges();
   });
 

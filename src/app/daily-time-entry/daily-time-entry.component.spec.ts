@@ -1,4 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DailyTimeEntryComponent } from './daily-time-entry.component';
 
@@ -6,9 +8,10 @@ describe('DailyTimeEntryComponent', () => {
   let component: DailyTimeEntryComponent;
   let fixture: ComponentFixture<DailyTimeEntryComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DailyTimeEntryComponent ]
+      declarations: [ DailyTimeEntryComponent ],
+      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule]
     })
     .compileComponents();
   }));

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -13,8 +13,11 @@ import { IssueLabelComponent } from '../issue-label/issue-label.component';
 import { RedmineService } from '../redmine.service';
 import { DayLog } from '../models/time-entries';
 import { dayLog1, dayLog2, emptyDayLog } from '../models/time-entries.mock';
+import { Injectable } from '@angular/core';
 
 const MOCK_DAY_LOGS = [dayLog1, dayLog2, emptyDayLog];
+
+@Injectable()
 class MockRedmineService extends RedmineService {
   listDayLogs(): Observable<DayLog[]> {
     return of(cloneDeep(MOCK_DAY_LOGS));
@@ -25,7 +28,7 @@ describe('WeekLogComponent', () => {
   let component: WeekLogComponent;
   let fixture: ComponentFixture<WeekLogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [WeekLogComponent, GapComponent, DailyTimeEntryComponent, TimeEntriesComponent, IssueLabelComponent],
       imports: [

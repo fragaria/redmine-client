@@ -1,7 +1,7 @@
 {
 
   "/api/*": {
-    "target": "",
+    "target": "https://fraga-redmine.f-app.it/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,

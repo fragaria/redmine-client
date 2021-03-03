@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -11,10 +11,12 @@ import { TimeEntryComponent } from './time-entry.component';
 import { SettingsService } from '../settings.service';
 import { RedmineService } from '../redmine.service';
 import { TimeEntry } from '../models/time-entries';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 class MockRedmineService extends RedmineService {
   createNewTimeEntry(t): Observable<TimeEntry> {
-    return of(t);
+    return of({...t, issue: {id: t.issue_id}, activity: {id: t.activity_id}});
   }
 }
 
@@ -22,7 +24,7 @@ describe('TimeEntryComponent', () => {
   let component: TimeEntryComponent;
   let fixture: ComponentFixture<TimeEntryComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         TimeEntryComponent
@@ -131,8 +133,8 @@ describe('TimeEntryComponent', () => {
 
     component.newEntryEmitter.subscribe(newEntry => {
       expect(newEntry.hours).toBe(component.timeEntryForm.controls['hours'].value);
-      expect(newEntry.issue_id).toBe(issueId);
-      expect(newEntry.activity_id).toBe(component.timeEntryForm.controls['activityId'].value);
+      expect(newEntry.issue.id).toBe(issueId);
+      expect(newEntry.activity.id).toBe(component.timeEntryForm.controls['activityId'].value);
       expect(newEntry.comments).toBe(commentText);
       expect(newEntry.spent_on).toBe(date1.format('YYYY-MM-DD'));
       date1.add(1, 'days');
